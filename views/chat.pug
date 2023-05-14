@@ -1,61 +1,99 @@
-extends base
-include _pricingCard
-block append head
-    script(src="/js/script.js" type='module' defer) 
+mixin chatBtn(chat)
+    .chat-btn-delete-container(data-chatId=`${chat._id}`)
+      button.btn-sample-pdf.btn.btn-primary.btn-chat
+        i.bi.bi-file-earmark-pdf= chat.name
+      button.btn-danger.btn.btn-delete-chat
+        i.bi.bi-archive
 
-include _featureCard
-block content
 
-    // Main container
-    dvi.chat-main-container
-        // chat left container
-        .chat-column-left.mobile-hidden
-            .chat-column-left-row-one
-                // PDF uploader
-                .pdf-uploader
-                    .drop-zone
-                        p#drop-description
-                            i.bi.bi-cloud-arrow-up
-                            | Drag and drop a file here or click to
-                            | upload
-                        input#file(type="file", hidden='', accept=".pdf,.txt")
-                        .d-flex.justify-content-center.loader-upload
-                            .spinner-grow.text-primary.loader(role="status")
-                    .file-info
-                    .d-flex.justify-content-center.loader-chatbtns
-                            .spinner-grow.text-primary.loader(role="status")
-                .chat-btn-container
-                // pdf chat History button
-                // Navigation Bar
-            .chat-column-left-row-two.mt-3
-                ul.chat-nav-list
-                    li.chat-nav-list-item
-                        a(href="http://localhost:8000/#") Home
-                    li.chat-nav-list-item
-                        a(href="http://localhost:8000/#") Pricing
-                    li.chat-nav-list-item
-                        a(href="http://localhost:8000/#") FAQS
-                    li.twitter-icon
-                        a(href="http://localhost:8000/#")
-                            i.bi.bi-twitter
-                button.btn.btn-danger.hidden.close-btn(type="button")
-                    i.bi.bi-x-circle
-                    | Return
-        // chat right container
-        .chat-column-right
-            .chat-column-right-row-one
-                span.button-dropsection.hidden
+doctype html
+html(lang="en")
+    head
+        include _head
+        script(src="/js/script.js" defer type='module') 
+    body
+        nav.navbar.navbar-expand-xl.py-1.chat-page
+            .container
+                a.navbar-brand(href="/")
+                    img.img-fluid.logo-image(src="/assets/img/logo-chatfiles.png", alt="logo")
+                button.navbar-toggler(type="button", data-bs-toggle="collapse", data-bs-target="#navbarNav", aria-controls="navbarNav", aria-expanded="false", aria-label="Toggle navigation")
                     i.bi.bi-list
-                .chat-title Title
-            // Chat area
-            .chat.chat-column-right-row-two
-                // chat messages containor
-                .messages-chat
-                    // filled by js
-                    // user  input with button
-            .chat-column-right-row-three
-                .input-group.default-input-group
-                    input#user-input.form-control.generate-input(type="text", placeholder="Chat with PDF")
-                    button#submit-button.btn-ask.btn.btn-default.btn-primary(type="button")
-                        i.bi.bi-send
-    
+                #navbarNav.collapse.navbar-collapse
+                    ul.navbar-nav.ms-auto.rounded
+                        li.nav-item
+                            a.nav-link.px-3.py-2.mx-2.my-2.my-lg-3(aria-current="page", href="/") Home
+                        li.nav-item
+                            a.nav-link.px-3.py-2.mx-1.my-2.my-lg-3(href="/chat") Chat
+                        li.nav-item
+                            a.nav-link.px-3.py-2.mx-1.my-2.my-lg-3(href="/pricing")= user? 'Upgrade' : 'Pricing'
+                        li.nav-item
+                            a.nav-link.px-3.py-2.mx-1.my-2.my-lg-3(href="/about") About us
+                        -if(!user)
+                            li.nav-item.text-center.action-buttons
+                                a.btn-outline-primary.btn.my-2.my-lg-3.mx-2.px-4.btn-login(href="/login")
+                                    i.bi.bi-box-arrow-in-right
+                                    | LOGIN
+                            li.nav-item.text-center.action-buttons
+                                a.btn-primary.btn.my-4.my-lg-3.ms-2.px-4.btn-register(href="/register")
+                                    i.bi.bi-pencil-square
+                                    | REGISTER
+                        -if(user)
+                            li.nav-item.text-center.action-buttons
+                                a.btn-primary.btn.my-4.my-lg-3.ms-2.px-4.btn-register(href='/profile')
+                                    i.bi= user? user.name.split(' ')[0] : "Dashboard"
+                            li.nav-item.text-center.action-buttons
+                                button.btn-logout.btn-outline-primary.btn.my-2.my-lg-3.mx-2.px-4.btn-login
+                                    i.bi
+                                    | Logout
+                            
+        // scroll top button
+        .scroll-top.opacity-0
+            a(href="#scroll-top")
+                i.bi.bi-arrow-up-circle-fill
+                // error display
+
+        dvi.chat-main-container
+            // chat left container
+            .chat-column-left.mobile-hidden
+                .chat-column-left-row-one
+                    // PDF uploader
+                    .pdf-uploader
+                        .drop-zone
+                            p#drop-description
+                                i.bi.bi-cloud-arrow-up
+                                | Drag and drop a file here or click to
+                                | upload
+                            input#file(type="file", hidden='', accept=".pdf,.txt")
+                            .d-flex.justify-content-center.loader-upload
+                                .spinner-grow.text-primary.loader(role="status")
+                        .file-info
+                        
+                    .chat-btn-container
+                        -for(let i = 0; i< chats.length; i++)
+                            +chatBtn(chats[i])
+                            
+                    // pdf chat History button
+                    // Navigation Bar
+                .chat-column-left-row-two.mt-3
+                    button.btn.btn-danger.hidden.close-btn(type="button")
+                        i.bi.bi-x-circle
+                        | Return
+            // chat right container
+            .chat-column-right
+                //- .chat-column-right-row-one
+                //-     span.button-dropsection.hidden
+                //-         i.bi.bi-list
+                //-     .chat-title Title
+                // Chat area
+                .chat.chat-column-right-row-two
+                    // chat messages containor
+                    .messages-chat
+                        // filled by js
+                        // user  input with button
+                .chat-column-right-row-three
+                    .input-group.default-input-group
+                        input#user-input.form-control.generate-input(type="text", placeholder="Chat with PDF")
+                        button#submit-button.btn-ask.btn.btn-default.btn-primary(type="button")
+                            i.bi.bi-send
+        
+        

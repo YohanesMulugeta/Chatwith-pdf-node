@@ -1,18 +1,17 @@
 import makeRequest from '../reusables/fetch.js';
 import showError from '../reusables/showError.js';
-import renderChatBtns from './renderChats.js';
 
 class Chat {
   promptInput = document.getElementById('user-input');
   generateBtn = document.querySelector('.btn-ask');
   containerContainer = document.querySelector('.chat-column-right-row-two');
-  chatTitle = document.querySelector('.chat-title');
+  // chatTitle = document.querySelector('.chat-title');
   state = { docName: '', chatTitle: '', history: [] };
 
   constructor({ chatTitle, docName, chatId, chatHistory }) {
     this.state.chatTitle = chatTitle;
     this.state.docName = docName;
-    this.chatTitle.textContent = chatTitle;
+    // this.chatTitle.textContent = chatTitle;
     this.state.history = chatHistory ? chatHistory : [];
     this.url = `api/v1/pdf/chat/${chatId}`;
 
@@ -35,7 +34,6 @@ class Chat {
     this.promptInput.addEventListener('keyup', this.handleEnterKey);
 
     this.populateHistory();
-    renderChatBtns();
   }
 
   populateHistory() {

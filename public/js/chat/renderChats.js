@@ -4,33 +4,30 @@ import Chat from './chatN.js';
 import showError from '../reusables/showError.js';
 import makeRequest from '../reusables/fetch.js';
 
-const loaderChatBtn = document.querySelector('.loader-chatbtns ');
+// export default function renderChatBtns(e) {
+//   const chats = localStorage.getItem('chatsChatpdf');
+//   if (!chats) return loaderChatBtn?.remove();
 
-export default function renderChatBtns(e) {
-  const chats = localStorage.getItem('chatsChatpdf');
+//   const parent = getSidebar().closest('.chat-column-left-row-one');
 
-  if (!chats) return loaderChatBtn?.remove();
+//   getSidebar().remove();
 
-  const parent = getSidebar().closest('.chat-column-left-row-one');
+//   parent.insertAdjacentHTML('beforeend', `<div class='chat-btn-container'> </div>`);
 
-  getSidebar().remove();
+//   const parsed = Object.entries(JSON.parse(chats));
 
-  parent.insertAdjacentHTML('beforeend', `<div class='chat-btn-container'> </div>`);
+//   parsed.sort((a, b) => +a[1].lastUpdatedDate - +b[1].lastUpdatedDate);
 
-  const parsed = Object.entries(JSON.parse(chats));
+//   loaderChatBtn.remove();
 
-  parsed.sort((a, b) => +a[1].lastUpdatedDate - +b[1].lastUpdatedDate);
-
-  loaderChatBtn.remove();
-
-  parsed.forEach((chat) => {
-    renderBtn(chat);
-  });
-}
+//   parsed.forEach((chat) => {
+//     renderBtn(chat);
+//   });
+// }
 
 async function handleDeleteChat(e) {
   const targetBtn = e.target.closest('.btn-delete-chat');
-  const { docname } = targetBtn.closest('.chat-btn-delete-container').dataset;
+  const { chatid } = targetBtn.closest('.chat-btn-delete-container').dataset;
   try {
     let time = 3;
     targetBtn.classList.remove('btn-delete-chat');
@@ -41,7 +38,7 @@ async function handleDeleteChat(e) {
 
     handleInterval();
     const intervalId = setInterval(handleInterval, 1000);
-    const timeoutId = setTimeout(deleteChat, time * 1100, targetBtn, docname, intervalId);
+    const timeoutId = setTimeout(deleteChat, time * 1100, targetBtn, chatid, intervalId);
 
     // binding the intercal id an dtarget btn to the undo handler
     const bindOpt = { intervalId, targetBtn, timeoutId };
@@ -71,7 +68,7 @@ export function handleChatBtns(e) {
 
   const chat = new Chat(
     chatBtn.closest('.chat-btn-delete-container').dataset.chattitle,
-    chatBtn.closest('.chat-btn-delete-container').dataset.docname
+    chatBtn.closest('.chat-btn-delete-container').dataset.chatid
   );
   setCurrentChat(chat);
 }
@@ -93,19 +90,13 @@ function handleUndo(e) {
   }, 1000);
 }
 
-async function deleteChat(btn, docname, intervalId) {
+async function deleteChat(btn, chatid, intervalId) {
   clearInterval(intervalId);
   showProgress(btn);
+  console.log(chatid);
 
   // DELETE FROM VECTOR DATABASE
-  await makeRequest({ method: 'delete', url: `/api/v1/pdf/${docname}` });
-
-  // DELETE FROM LOCAL STORAGE
-  const parsedStorage = JSON.parse(localStorage.getItem('chatsChatpdf'));
-  parsedStorage[docname] = undefined;
-
-  // STORE UPDATED STORAGE
-  localStorage.setItem('chatsChatpdf', JSON.stringify(parsedStorage));
+  await makeRequest({ method: 'delete', url: `/api/v1/pdf/${chatid}` });
 
   const container = btn.closest('.chat-btn-delete-container');
 

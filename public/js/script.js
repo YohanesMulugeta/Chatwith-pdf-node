@@ -1,5 +1,5 @@
 import Chat from './chat/chatN.js';
-import renderChatBtns, { handleChatBtns } from './chat/renderChats.js';
+import { handleChatBtns } from './chat/renderChats.js';
 import fetchAndDisplay from './uploadN.js';
 
 //TOGGLER MOBILE VERSION
@@ -18,7 +18,7 @@ const dropDesc = document.getElementById('#drop-description');
 
 const fileInfo = document.querySelector('.file-info');
 
-btnDropSection.addEventListener('click', () => {
+btnDropSection?.addEventListener('click', () => {
   chatColumnLeft.classList.remove('mobile-hidden');
 });
 
@@ -49,8 +49,6 @@ dropZone.addEventListener('click', () => {
 input.addEventListener('change', async () => {
   if (input.files[0]) fetchAndDisplay(input.files[0], true);
 });
-
-window.addEventListener('load', renderChatBtns);
 
 sideBar.addEventListener('click', handleChatBtns);
 
