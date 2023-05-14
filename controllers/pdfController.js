@@ -55,6 +55,8 @@ exports.processDocument = catchAsync(async function (req, res, next) {
 
   const fileNameOnPine = await loadPdf(file, req.fileName);
 
+  // const fileNameOnPine = 'lala';
+
   // store the new chat
   const user = await User.findById(req.user._id).select('+chats.chatHistory');
   user.chats.push({ name: originalName, vectorName: fileNameOnPine });
@@ -97,6 +99,8 @@ exports.chat = catchAsync(async function (req, res, next) {
     question: sanitizedQuestion,
     chat_history: chatHistory,
   });
+
+  // console.log(response);
 
   // Update User
   user.chats

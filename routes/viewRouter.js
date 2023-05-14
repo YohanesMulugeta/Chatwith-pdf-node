@@ -10,14 +10,12 @@ const router = express.Router();
 
 router.use(authController.isLogedin);
 
-router.route('/chatpdf').get(viewController.chatpdf);
-
 router.route('/').get(viewController.home);
 
 // router.route('/about').get(viewController.about);
 // router.route('/pricing').get(viewController.pricing);
 // router.route('/register').get(viewController.register);
-// router.route('/login').get(viewController.login);
+router.route('/login').get(viewController.login);
 // router.route('/features/:feature').get(viewController.feature);
 // router.route('/features').get(viewController.features);
 // router.route('/terms').get(viewController.terms);
@@ -26,7 +24,8 @@ router.route('/').get(viewController.home);
 
 // router.route('/profile').get(authController.protect, viewController.profile);
 
-// router.use(authController.protect, authController.strictTo('dev', 'admin'));
+router.use(authController.protect, authController.strictTo('dev', 'admin'));
 // router.route('/admin/users').get(adminController.users);
 
+router.route('/chat').get(viewController.chatpdf);
 module.exports = router;

@@ -94,6 +94,7 @@ app.use('/', viewRouter);
 // app.use('/', viewRouter);
 
 app.use('*', (req, res, next) => {
+  console.log(req.originalUrl);
   return next(
     new AppError('There is no route diffinition with this url on our server.', 404)
   );

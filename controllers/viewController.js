@@ -63,5 +63,5 @@ exports.resetPassword = function (req, res, next) {
 };
 
 exports.chatpdf = function (req, res, next) {
-  res.render('chatUi');
+  res.render('chat');
 };
