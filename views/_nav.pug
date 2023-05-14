@@ -1,0 +1,29 @@
+// Navigation section
+nav.navbar.navbar-expand-xl.fixed-top.py-1
+    .container
+        a.navbar-brand(href="/")
+            img.img-fluid.logo-image(src="/assets/img/logo-chatfiles.png", alt="logo")
+        button.navbar-toggler(type="button", data-bs-toggle="collapse", data-bs-target="#navbarNav", aria-controls="navbarNav", aria-expanded="false", aria-label="Toggle navigation")
+            i.bi.bi-list
+        #navbarNav.collapse.navbar-collapse
+            ul.navbar-nav.ms-auto.rounded
+                li.nav-item
+                    a.nav-link.px-3.py-2.mx-2.my-2.my-lg-3(aria-current="page", href="/") Home
+                li.nav-item
+                    a.nav-link.px-3.py-2.mx-1.my-2.my-lg-3(href="./components/chat.html") Chat
+                li.nav-item
+                    a.nav-link.px-3.py-2.mx-1.my-2.my-lg-3(href="./components/pricing.html") Pricing
+                li.nav-item
+                    a.nav-link.px-3.py-2.mx-1.my-2.my-lg-3(href="./components/about.html") About us
+                li.nav-item.text-center.action-buttons
+                    a.btn-outline-primary.btn.my-2.my-lg-3.mx-2.px-4.btn-login(href="./components/login.html")
+                        i.bi.bi-box-arrow-in-right
+                        | login
+                li.nav-item.text-center.action-buttons
+                    a.btn-primary.btn.my-4.my-lg-3.ms-2.px-4.btn-register(href="./components/register.html")
+                        i.bi.bi-pencil-square
+                        | signup
+// scroll top button
+.scroll-top.opacity-0
+    a(href="#scroll-top")
+        i.bi.bi-arrow-up-circle-fill

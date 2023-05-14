@@ -5,7 +5,7 @@ const catchAsync = require('../util/catchAsync');
 exports.home = catchAsync(async function (req, res, next) {
   const plans = await Plan.find();
 
-  res.render('index', { title: 'Home', plans });
+  res.render('home', { title: 'Home', plans });
 });
 
 exports.about = function (req, res, next) {

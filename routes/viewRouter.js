@@ -13,6 +13,7 @@ router.use(authController.isLogedin);
 router.route('/chatpdf').get(viewController.chatpdf);
 
 router.route('/').get(viewController.home);
+
 // router.route('/about').get(viewController.about);
 // router.route('/pricing').get(viewController.pricing);
 // router.route('/register').get(viewController.register);
