@@ -15,14 +15,24 @@ nav.navbar.navbar-expand-xl.fixed-top.py-1
                     a.nav-link.px-3.py-2.mx-1.my-2.my-lg-3(href="./components/pricing.html") Pricing
                 li.nav-item
                     a.nav-link.px-3.py-2.mx-1.my-2.my-lg-3(href="./components/about.html") About us
-                li.nav-item.text-center.action-buttons
-                    a.btn-outline-primary.btn.my-2.my-lg-3.mx-2.px-4.btn-login(href="./components/login.html")
-                        i.bi.bi-box-arrow-in-right
-                        | login
-                li.nav-item.text-center.action-buttons
-                    a.btn-primary.btn.my-4.my-lg-3.ms-2.px-4.btn-register(href="./components/register.html")
-                        i.bi.bi-pencil-square
-                        | signup
+                -if(!user)
+                    li.nav-item.text-center.action-buttons
+                        a.btn-outline-primary.btn.my-2.my-lg-3.mx-2.px-4.btn-login(href="/login")
+                            i.bi.bi-box-arrow-in-right
+                            | LOGIN
+                    li.nav-item.text-center.action-buttons
+                        a.btn-primary.btn.my-4.my-lg-3.ms-2.px-4.btn-register(href="/register")
+                            i.bi.bi-pencil-square
+                            | REGISTER
+                -if(user)
+                    li.nav-item.text-center.action-buttons
+                        a.btn-primary.btn.my-4.my-lg-3.ms-2.px-4.btn-register(href='/profile')
+                            i.bi= user? user.name.split(' ')[0] : "Dashboard"
+                    li.nav-item.text-center.action-buttons
+                        button.btn-logout.btn-outline-primary.btn.my-2.my-lg-3.mx-2.px-4.btn-login
+                            i.bi
+                            | Logout
+                            
 // scroll top button
 .scroll-top.opacity-0
     a(href="#scroll-top")
