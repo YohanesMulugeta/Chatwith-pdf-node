@@ -54,6 +54,7 @@ body {
 
   display: flex;
   flex-direction: column;
+
   gap: 15px;
 }
 
@@ -216,6 +217,10 @@ body {
     display: block;
   }
 
+  .btn-chat {
+    flex-grow: 1;
+  }
+
   .hidden {
     display: block;
     cursor: pointer;
@@ -234,5 +239,15 @@ body {
 
   .file-name-header {
     font-size: 0.8rem;
+  }
+
+  .upload-chat-btn-container {
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
   }
 }

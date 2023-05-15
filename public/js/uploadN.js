@@ -3,7 +3,7 @@ import { showProgress, removeProgress } from './reusables/showProgressBtn.js';
 import { showAlert } from './reusables/alert.js';
 import makeRequest from './reusables/fetch.js';
 import Chat from './chat/chatN.js';
-import { handleLeftColHide } from './chat/chatBtns.js';
+import { handleLeftColHide, handleSidebarExpandHide } from './chat/chatBtns.js';
 
 const loader = document.querySelector('.loader-upload')?.querySelector('.loader');
 const input = document.querySelector('input[type="file"]');
@@ -51,6 +51,7 @@ export default async function fetchAndDisplay(fileContainer, isFile = false) {
 
       // Progress Indicators
       showAlert('success', 'Successful on uploading your document!');
+      // handleSidebarExpandHide();
       handleLeftColHide();
       loader.style.display = 'none';
       input.removeAttribute('disabled');

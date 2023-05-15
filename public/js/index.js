@@ -5,7 +5,7 @@ import handleUpdateMe from './updateMe.js';
 import handleUpdatePassword from './updatePassword.js';
 // import { analyzePdf, checkReference } from './DocAnalyzer.js';
 import handleGetStarted from './checkout.js';
-import { handleChatBtns } from './chat/chatBtns.js';
+import { handleChatBtns, handleSidebarExpandHide } from './chat/chatBtns.js';
 import fetchAndDisplay from './uploadN.js';
 
 const formAnalyser = document.getElementById('analyser-form');
@@ -28,6 +28,7 @@ const btnDropSection = document.querySelector('.button-dropsection');
 const input = document.getElementById('file');
 const chatColumnLeft = document.querySelector('.chat-column-left');
 // const btnTools = document.querySelector('.button-tools');
+const expandSideBar = document.querySelector('.btn-open-sidebar');
 
 // Pricing section
 const sectionPricing = document.querySelector('.section-pricing');
@@ -65,9 +66,7 @@ dropZone?.addEventListener('dragover', (e) => {
   dropZone.classList.add('drop-zone--active');
 });
 
-btnDropSection?.addEventListener('click', () => {
-  chatColumnLeft.classList.remove('mobile-hidden');
-});
+expandSideBar?.addEventListener('click', handleSidebarExpandHide);
 
 dropZone?.addEventListener('drop', async (e) => {
   e.preventDefault();

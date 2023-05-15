@@ -66,7 +66,7 @@ exports.processDocument = catchAsync(async function (req, res, next) {
     status: 'success',
     docName: fileNameOnPine,
     chatTitle: originalName,
-    chatId: updatedUser.chats.slice(-1)[0]._id,
+    _id: updatedUser.chats.slice(-1)[0]._id,
   });
 });
 

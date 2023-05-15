@@ -58,6 +58,7 @@ class Chat {
   handleEnterKey = (e) => {
     if (e.key === 'Enter') {
       this.sendQuestion(this.promptInput.value);
+      this.promptInput.value = '';
     }
   };
 

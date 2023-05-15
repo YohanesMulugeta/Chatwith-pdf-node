@@ -4,6 +4,8 @@ import showError from '../reusables/showError.js';
 import makeRequest from '../reusables/fetch.js';
 import { showAlert } from '../reusables/alert.js';
 
+const sidebar = document.querySelector('.upload-chat-btn-container');
+
 async function handleDeleteChat(e) {
   const targetBtn = e.target.closest('.btn-delete-chat');
   const { chatid } = targetBtn.closest('.chat-btn-delete-container').dataset;
@@ -56,6 +58,7 @@ export async function handleChatBtns(e) {
 
     const chat = new Chat({ ...data, chatTitle: data.name });
     // setCurrentChat(chat);
+    handleSidebarExpandHide();
 
     removeProgress(chatBtn, innerHTMLBtn);
     showAlert('success', 'Successful on loading your data');
@@ -123,5 +126,10 @@ function getSidebar() {
 export function handleLeftColHide(e) {
   if (e) if (!e.target.closest('.btn-chat') && !e.target.closest('.close-btn')) return;
 
-  chatColumnLeft.classList.add('mobile-hidden');
+  sidebar.classList.add('mobile-hidden');
+}
+
+export function handleSidebarExpandHide() {
+  sidebar.classList.toggle('mobile-hidden');
+  // console.log(expandSideBar.closest('.btn-open-sidebar').firstChild);
 }
