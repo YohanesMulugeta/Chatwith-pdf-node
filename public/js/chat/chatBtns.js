@@ -1,4 +1,3 @@
-// import { setCurrentChat } from '../script.js';
 import { removeProgress, showProgress } from '../reusables/showProgressBtn.js';
 import Chat from './chatN.js';
 import showError from '../reusables/showError.js';
@@ -33,7 +32,7 @@ async function handleDeleteChat(e) {
 
 export async function handleChatBtns(e) {
   const chatBtn = e.target.closest('.btn-chat');
-  const innerHTMLBtn = chatBtn.innerHTML;
+  const innerHTMLBtn = chatBtn?.innerHTML;
   const deleteChatBtn = e.target.closest('.btn-delete-chat');
   try {
     if (!chatBtn && !deleteChatBtn) return;
@@ -49,12 +48,11 @@ export async function handleChatBtns(e) {
 
     // Disabling current active chat btn
     chatBtn.classList.add('active-chat-btn');
-    chatBtn.setAttribute('disabled', true);
+
+    // console.log(chatBtn);
 
     const chatId = chatBtn.closest('.chat-btn-delete-container').dataset.chatid;
     const { data } = await makeRequest({ url: `/api/v1/pdf/chat/${chatId}` });
-
-    console.log(data);
 
     const chat = new Chat({ ...data, chatTitle: data.name });
     // setCurrentChat(chat);
@@ -62,6 +60,7 @@ export async function handleChatBtns(e) {
     removeProgress(chatBtn, innerHTMLBtn);
     showAlert('success', 'Successful on loading your data');
     // setCurrentChat(chat);
+    chatBtn.setAttribute('disabled', true);
   } catch (err) {
     showError(err, chatBtn, innerHTMLBtn);
   }
@@ -90,7 +89,7 @@ async function deleteChat(btn, chatid, intervalId) {
   console.log(chatid);
 
   // DELETE FROM VECTOR DATABASE
-  await makeRequest({ method: 'delete', url: `/api/v1/pdf/${chatid}` });
+  await makeRequest({ method: 'delete', url: `/api/v1/pdf/chat/${chatid}` });
 
   const container = btn.closest('.chat-btn-delete-container');
 
@@ -119,4 +118,10 @@ export function renderBtn(chat) {
 
 function getSidebar() {
   return document.querySelector('.chat-btn-container');
+}
+
+export function handleLeftColHide(e) {
+  if (e) if (!e.target.closest('.btn-chat') && !e.target.closest('.close-btn')) return;
+
+  chatColumnLeft.classList.add('mobile-hidden');
 }

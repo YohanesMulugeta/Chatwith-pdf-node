@@ -3,13 +3,13 @@ import { showProgress, removeProgress } from './reusables/showProgressBtn.js';
 import { showAlert } from './reusables/alert.js';
 import makeRequest from './reusables/fetch.js';
 import Chat from './chat/chatN.js';
-import { handleLeftColHide, setCurrentChat } from './script.js';
+import { handleLeftColHide } from './chat/chatBtns.js';
 
 const loader = document.querySelector('.loader-upload')?.querySelector('.loader');
 const input = document.querySelector('input[type="file"]');
 
 export function setChatTitle(title) {
-  document.querySelector('.chat-title').textContent = title;
+  // document.querySelector('.chat-title')?.textContent = title;
 }
 
 export default async function fetchAndDisplay(fileContainer, isFile = false) {
@@ -47,8 +47,7 @@ export default async function fetchAndDisplay(fileContainer, isFile = false) {
       // {chatId, chatTitle,docName} = data
 
       //   Creating new chat instance and removing the already existed one
-      const chat = new Chat(data);
-      setCurrentChat(chat);
+      new Chat(data);
 
       // Progress Indicators
       showAlert('success', 'Successful on uploading your document!');

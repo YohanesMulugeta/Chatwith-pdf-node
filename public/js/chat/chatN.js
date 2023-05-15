@@ -1,10 +1,12 @@
 import makeRequest from '../reusables/fetch.js';
 import showError from '../reusables/showError.js';
 
+let currentChat;
+
 class Chat {
   promptInput = document.getElementById('user-input');
   generateBtn = document.querySelector('.btn-ask');
-  containerContainer = document.querySelector('.chat-column-right-row-two');
+  messagesInputContainer = document.querySelector('.chat-container');
   // chatTitle = document.querySelector('.chat-title');
   state = { docName: '', chatTitle: '', history: [] };
 
@@ -15,21 +17,18 @@ class Chat {
     this.state.history = chatHistory ? chatHistory : [];
     this.url = `api/v1/pdf/chat/${_id}`;
 
+    this.setCurrentChat(this);
+
     this.init();
   }
 
   init() {
-    document.querySelector('.messages-chat').remove();
-    this.containerContainer.insertAdjacentHTML(
+    document.querySelector('.messages-container').remove();
+    this.messagesInputContainer.insertAdjacentHTML(
       'afterbegin',
-      `<div class="messages-chat">
-        <div class='d-flex justify-content-center loader-messages'>
-          <div class='spinner-grow text-primary loader'>
-          </div>
-        </div>
-      </div>`
+      `<div class='messages-container'></div>`
     );
-    this.chatContainer = document.querySelector('.messages-chat');
+    this.chatContainer = document.querySelector('.messages-container');
     this.generateBtn.addEventListener('click', this.handleGenerateBtn);
     this.promptInput.addEventListener('keyup', this.handleEnterKey);
 
@@ -37,7 +36,6 @@ class Chat {
   }
 
   populateHistory() {
-    const loader = document.querySelector('.loader-messages');
     if (this.state.history.length === 0) {
       this.addBotMessage(
         `Hello, I am here to help assist you with any question related to the document: ${this.state?.chatTitle}`
@@ -48,7 +46,6 @@ class Chat {
         this.addBotMessage(hist[1].trim().replace(/answer:/i, ''));
       });
     }
-    loader.remove();
   }
 
   handleGenerateBtn = (e) => {
@@ -77,15 +74,10 @@ class Chat {
       };
 
       const { data } = await makeRequest({ dataTobeSent, url: this.url, method: 'post' });
-      // console.log(data);
-      // source files at data.sourceDocuments[].pageContent
-      // this.state.history.push([`Question: ${question}`, `Answer: ${data.response.text}`]);
-      // this.storeStateToLocal();
-      console.log(data);
 
       this.replaceTypingEffect(data.response.text, data.response.sourceDocuments);
     } catch (err) {
-      this.replaceTypingEffect('Something went wron. Please Try Again!');
+      this.replaceTypingEffect('Something went wrong. Please Try Again!');
       showError(err, this.generateBtn, 'Try Again!');
       setTimeout(() => {
         this.generateBtn.innerHTML = `<i class='bi bi-send'></i>`;
@@ -96,10 +88,11 @@ class Chat {
 
   addUserMessage(message) {
     const userDiv = document.createElement('div');
-    userDiv.className = 'message text-only text-user';
-    userDiv.innerHTML = `<div class="user-input"><span class="text ">${message}</span></div>`;
+    userDiv.className = 'user-message message';
+    userDiv.innerHTML = message;
     this.chatContainer.appendChild(userDiv);
-    userDiv.scrollIntoView();
+    // userDiv.scrollIntoView();
+    this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
   }
 
   //create new html instance for BOT message
@@ -112,12 +105,14 @@ class Chat {
 
     document.querySelector('.last-bot-message')?.classList.remove('last-bot-message');
     const botDiv = document.createElement('div');
-    botDiv.className = 'message text-bot last-bot-message';
-    botDiv.innerHTML = `<span class="text generated-bot-text typing-dots">${formatedText} </span>`;
-    // botDiv.classList.add('last-bot-message');
+    botDiv.className = 'bot-message message';
+    botDiv.innerHTML = formatedText;
+
+    botDiv.classList.add('last-bot-message');
     this.chatContainer.appendChild(botDiv);
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
-    botDiv.scrollIntoView();
+
+    // botDiv.scrollIntoView();
   }
 
   replaceTypingEffect(botText, sourceDocuments) {
@@ -132,41 +127,12 @@ class Chat {
       });
 
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
-    lastBotMessage.scrollIntoView();
+    // lastBotMessage.scrollIntoView();
   }
 
   collectGarbage() {
     this.generateBtn.removeEventListener('click', this.handleGenerateBtn);
     this.promptInput.removeEventListener('keyup', this.handleEnterKey);
-  }
-
-  storeStateToLocal(isnew = false) {
-    const chats = JSON.parse(localStorage.getItem('chatsChatpdf'));
-    this.state.lastUpdatedDate = Date.now();
-    if (isnew) {
-      chats[this.state.docName] = this.state;
-      return localStorage.setItem('chatsChatpdf', JSON.stringify(chats));
-    }
-
-    chats[this.state.docName] = this.state;
-    localStorage.setItem('chatsChatpdf', JSON.stringify(chats));
-  }
-
-  setState() {
-    const storage = localStorage.getItem('chatsChatpdf');
-
-    if (!storage)
-      return localStorage.setItem(
-        'chatsChatpdf',
-        JSON.stringify({ [this.state.docName]: this.state })
-      );
-
-    const parsed = JSON.parse(storage);
-    const nextState = parsed[this.state.docName];
-
-    if (!nextState) return this.storeStateToLocal(true);
-
-    this.state = nextState;
   }
 
   renderSourceAccordion(source, botMessage, i) {
@@ -188,6 +154,11 @@ class Chat {
             </div>
           </div>`
     );
+  }
+
+  setCurrentChat(chat) {
+    currentChat?.collectGarbage();
+    currentChat = chat;
   }
 }
 

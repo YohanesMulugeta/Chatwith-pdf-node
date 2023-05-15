@@ -27,5 +27,5 @@ router.route('/login').get(viewController.login);
 router.use(authController.protect, authController.strictTo('dev', 'admin'));
 // router.route('/admin/users').get(adminController.users);
 
-router.route('/chatN').get(viewController.chatpdf);
+router.route('/chat').get(viewController.chatpdf);
 module.exports = router;

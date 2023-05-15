@@ -5,7 +5,7 @@ import handleUpdateMe from './updateMe.js';
 import handleUpdatePassword from './updatePassword.js';
 // import { analyzePdf, checkReference } from './DocAnalyzer.js';
 import handleGetStarted from './checkout.js';
-import { handleChatBtns } from './chat/renderChats.js';
+import { handleChatBtns } from './chat/chatBtns.js';
 import fetchAndDisplay from './uploadN.js';
 
 const formAnalyser = document.getElementById('analyser-form');
@@ -56,11 +56,11 @@ forgotPassword?.addEventListener('click', (e) => {
 chatBtnContainer?.addEventListener('click', handleChatBtns);
 
 // DrodDown
-dropZone.addEventListener('dragleave', (e) => {
+dropZone?.addEventListener('dragleave', (e) => {
   dropZone.classList.remove('drop-zone--active');
 });
 
-dropZone.addEventListener('dragover', (e) => {
+dropZone?.addEventListener('dragover', (e) => {
   e.preventDefault();
   dropZone.classList.add('drop-zone--active');
 });
@@ -69,17 +69,17 @@ btnDropSection?.addEventListener('click', () => {
   chatColumnLeft.classList.remove('mobile-hidden');
 });
 
-dropZone.addEventListener('drop', async (e) => {
+dropZone?.addEventListener('drop', async (e) => {
   e.preventDefault();
   dropZone.classList.remove('drop-zone--active');
 
   fetchAndDisplay(e);
 });
 
-dropZone.addEventListener('click', () => {
+dropZone?.addEventListener('click', () => {
   input.click();
 });
 
-input.addEventListener('change', async () => {
+input?.addEventListener('change', async () => {
   if (input.files[0]) fetchAndDisplay(input.files[0], true);
 });

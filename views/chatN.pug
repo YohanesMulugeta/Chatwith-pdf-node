@@ -7,7 +7,8 @@ block append head
 mixin chatBtn(chat)
     .chat-btn-delete-container(data-chatId=`${chat._id}`)
       button.btn-sample-pdf.btn.btn-primary.btn-chat
-        i.bi.bi-file-earmark-pdf= chat.name
+        i.bi.bi-file-earmark-pdf
+        p= chat.name
       button.btn-danger.btn.btn-delete-chat
         i.bi.bi-archive
 
@@ -15,7 +16,7 @@ mixin chatBtn(chat)
 block content
     section#scroll-top.breadcrumb
         section.chat-upload-container
-            .upload-chat-btn-container 
+            .upload-chat-btn-container.mobile-hidden 
                 .pdf-uploader
                     .drop-zone
                         p#drop-description
@@ -28,40 +29,43 @@ block content
                     .file-info
                 
                 .chat-btn-container.hide-scroll-bar
-                    //- -for(let i = 0; i< chats.length; i++)
-                    //-     +chatBtn(chats[i])
-                    -for(let i = 0; i<= 15; i++)
-                        .chat-btn-delete-container(data-chatId=`alfdjlkfjaklsdjfkds`)
-                            button.btn-sample-pdf.btn.btn-primary.btn-chat
-                                i.bi.bi-file-earmark-pdf 
-                                | Resume
-                            button.btn-danger.btn.btn-delete-chat
-                                i.bi.bi-archive
+                    -for(let i = 0; i< chats.length; i++)
+                        +chatBtn(chats[i])
+                    //- -for(let i = 0; i<= 15; i++)
+                    //-     .chat-btn-delete-container(data-chatId=`alfdjlkfjaklsdjfkds`)
+                    //-         button.btn-sample-pdf.btn.btn-primary.btn-chat
+                    //-             i.bi.bi-file-earmark-pdf 
+                    //-             | Resume
+                    //-         button.btn-danger.btn.btn-delete-chat
+                    //-             i.bi.bi-archive
 
             .chat-container
                 .messages-container
-                    .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elitsit amet consectetur adipisicing elit. Dolor, ullam?
-                    .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
-                    .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
-                    .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
-                    .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
-                    .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
-                    .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
-                    .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
-                    .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elitsit amet consectetur adipisicing elit. Dolor, ullam?
+                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
                 .input-send-container
                     input#user-input.form-control.generate-input(type="text", placeholder="Chat with PDF")
                     button#submit-button.btn-ask.btn.btn-default.btn-primary(type="button")
                         i.bi.bi-send
+        
+    button.btn.btn-open-sidebar.hidden-desktop.btn-outline-primary
+        i.bi.bi-arrow-bar-right
     //- dvi.chat-main-container
     //-     // chat left container
     //-     .chat-column-left.mobile-hidden
