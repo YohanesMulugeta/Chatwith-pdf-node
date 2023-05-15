@@ -233,6 +233,11 @@ body {
   .chat-container {
     width: 100vw;
   }
+
+  .messages-container {
+    width: 100%;
+    margin: 20px auto;
+  }
   /* .input-group {
     width: 85vw;
   } */
