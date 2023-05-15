@@ -7,7 +7,7 @@ const btnDropSection = document.querySelector('.button-dropsection');
 // const btnTools = document.querySelector('.button-tools');
 
 const chatColumnLeft = document.querySelector('.chat-column-left');
-const chatTools = document.querySelector('.chat-tools');
+
 const leftColumn = document.querySelector('.chat-column-left');
 const sideBar = document.querySelector('.chat-column-left-row-one');
 
@@ -22,35 +22,35 @@ btnDropSection?.addEventListener('click', () => {
   chatColumnLeft.classList.remove('mobile-hidden');
 });
 
-leftColumn.addEventListener('click', handleLeftColHide);
+// leftColumn.addEventListener('click', handleLeftColHide);
 
-let currentChat;
+// let currentChat;
 
-dropZone.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  dropZone.classList.add('drop-zone--active');
-});
+// dropZone.addEventListener('dragover', (e) => {
+//   e.preventDefault();
+//   dropZone.classList.add('drop-zone--active');
+// });
 
-dropZone.addEventListener('dragleave', (e) => {
-  dropZone.classList.remove('drop-zone--active');
-});
+// dropZone.addEventListener('dragleave', (e) => {
+//   dropZone.classList.remove('drop-zone--active');
+// });
 
-dropZone.addEventListener('drop', async (e) => {
-  e.preventDefault();
-  dropZone.classList.remove('drop-zone--active');
+// dropZone.addEventListener('drop', async (e) => {
+//   e.preventDefault();
+//   dropZone.classList.remove('drop-zone--active');
 
-  fetchAndDisplay(e);
-});
+//   fetchAndDisplay(e);
+// });
 
-dropZone.addEventListener('click', () => {
-  input.click();
-});
+// dropZone.addEventListener('click', () => {
+//   input.click();
+// });
 
-input.addEventListener('change', async () => {
-  if (input.files[0]) fetchAndDisplay(input.files[0], true);
-});
+// input.addEventListener('change', async () => {
+//   if (input.files[0]) fetchAndDisplay(input.files[0], true);
+// });
 
-sideBar.addEventListener('click', handleChatBtns);
+// sideBar?.addEventListener('click', handleChatBtns);
 
 export const setCurrentChat = (chat) => {
   currentChat?.collectGarbage();

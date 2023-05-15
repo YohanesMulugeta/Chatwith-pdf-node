@@ -1,7 +1,7 @@
 extends base
 block append head
     link(rel="stylesheet", href="/assets/styles/chatN.css")
-    script(src="/js/script.js" defer type='module') 
+    //- script(src="/js/script.js" defer type='module') 
 
 
 mixin chatBtn(chat)
@@ -23,20 +23,20 @@ block content
                             | Drag and drop a file here or click to
                             | upload
                         input#file(type="file", hidden='', accept=".pdf,.txt")
-                        //- .d-flex.justify-content-center.loader-upload
-                        //-     .spinner-grow.text-primary.loader(role="status")
+                        .d-flex.justify-content-center.loader-upload
+                            .spinner-grow.text-primary.loader(role="status")
                     .file-info
                 
                 .chat-btn-container.hide-scroll-bar
-                    -for(let i = 0; i< chats.length; i++)
-                        +chatBtn(chats[i])
-                    //- -for(let i = 0; i<= 15; i++)
-                    //-     .chat-btn-delete-container(data-chatId=`alfdjlkfjaklsdjfkds`)
-                    //-         button.btn-sample-pdf.btn.btn-primary.btn-chat
-                    //-             i.bi.bi-file-earmark-pdf 
-                    //-             | Resume
-                    //-         button.btn-danger.btn.btn-delete-chat
-                    //-             i.bi.bi-archive
+                    //- -for(let i = 0; i< chats.length; i++)
+                    //-     +chatBtn(chats[i])
+                    -for(let i = 0; i<= 15; i++)
+                        .chat-btn-delete-container(data-chatId=`alfdjlkfjaklsdjfkds`)
+                            button.btn-sample-pdf.btn.btn-primary.btn-chat
+                                i.bi.bi-file-earmark-pdf 
+                                | Resume
+                            button.btn-danger.btn.btn-delete-chat
+                                i.bi.bi-archive
 
             .chat-container
                 .messages-container

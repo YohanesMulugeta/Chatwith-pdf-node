@@ -12,8 +12,6 @@ body {
   /* overflow: hidden; */
 }
 
-/* --------- Reusabels */
-
 .hide-scroll-bar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
@@ -71,6 +69,14 @@ body {
 
 .drop-zone:hover {
   border: 2px dashed #664949;
+}
+
+.drop-zone--active {
+  border-color: #000;
+}
+
+.loader-upload > .loader {
+  display: none;
 }
 
 /* ------------- lests of chat */

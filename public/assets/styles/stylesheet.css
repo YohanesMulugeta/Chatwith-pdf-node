@@ -838,3 +838,16 @@ input:checked + .slider:before {
 .card-group:hover > .big-card:nth-child(8) {
   transform: translate(80%, 16%) rotate(24deg);
 }
+
+/* --------- Reusabels */
+.alert-custom.fixed {
+  position: fixed;
+  top: 10px;
+  width: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,4 +1,4 @@
-import { setCurrentChat } from '../script.js';
+// import { setCurrentChat } from '../script.js';
 import { removeProgress, showProgress } from '../reusables/showProgressBtn.js';
 import Chat from './chatN.js';
 import showError from '../reusables/showError.js';
@@ -57,7 +57,7 @@ export async function handleChatBtns(e) {
     console.log(data);
 
     const chat = new Chat({ ...data, chatTitle: data.name });
-    setCurrentChat(chat);
+    // setCurrentChat(chat);
 
     removeProgress(chatBtn, innerHTMLBtn);
     showAlert('success', 'Successful on loading your data');
