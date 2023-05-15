@@ -13,10 +13,6 @@
   padding: 0;
 }
 
-/* nav.chat-page {
-  height: 80px;
-} */
-
 @keyframes popup {
   0% {
     transform: scale(0);
@@ -97,7 +93,7 @@
 .chat-main-container {
   display: grid;
   grid-template-columns: 0.2fr 1fr;
-  height: 100vh;
+  height: 80vh !important;
 }
 /*Left*/
 .chat-column-left {
@@ -133,13 +129,17 @@
   padding-right: 10px;
 }
 
+.navbar.chat-page {
+  height: 10vh;
+}
 .chat-column-right {
+  /* height: 100%; */
   /* display: grid;
   grid-template-rows: 10vh 80vh 10vh; */
-  display: flex;
+  /* display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 10px; */
 }
 
 .chat-column-right-row-one {
@@ -153,13 +153,17 @@
 .chat-column-right-row-two {
   background: rgba(0, 97, 255, 0.1);
   box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.07);
-  height: 90%;
+  height: 100%;
   width: 100%;
-
+  position: relative;
   overflow: auto;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+/* .nabbar.chatPage{
+  height: ;
+} */
 
 .messages-chat {
   margin: 20px auto 10px;
@@ -210,6 +214,11 @@
   border-radius: 7px;
   overflow: hidden;
   border: 1px solid #66afe9;
+
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
 }
 
 /* .input-group-btn {
@@ -276,11 +285,13 @@ Drag and drop
   /* height: 5rem; */
 }
 
-.loader-chatbtns {
-  margin-top: 50px;
+.loader-chat {
+  position: fixed;
+  top: 50%;
+  left: 50%;
 }
 
-.loader-chatbtns > .loader {
+.loader-chat > .loader {
   width: 3rem;
   height: 3rem;
 }
@@ -362,7 +373,7 @@ MOBILE VERSION
   .chat-main-container {
     display: grid;
     grid-template-columns: 1fr;
-    min-height: 100vh;
+    min-height: 80vh;
   }
   .chat-column-left {
     position: fixed;
@@ -417,7 +428,7 @@ ONLY FOR DEMO PURPOSE STYLES
 /* TODO: check scroll bar */
 .messages-chat {
   overflow-y: scroll;
-  max-height: 500px;
+  max-height: 90%;
 }
 
 /* .chat .messages-chat {

@@ -9,8 +9,10 @@ router.use(authController.protect, pdfController.checkTokenLimit);
 
 router.route('/processpdf').post(pdfController.uploadPdf, pdfController.processDocument);
 
-router.route('/chat/:chatId').post(pdfController.chat);
-
-router.route('/:chatId').delete(pdfController.deleteChat);
+router
+  .route('/chat/:chatId')
+  .post(pdfController.chat)
+  .get(pdfController.getChat)
+  .delete(pdfController.deleteChat);
 
 module.exports = router;

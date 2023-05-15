@@ -63,5 +63,5 @@ exports.resetPassword = function (req, res, next) {
 };
 
 exports.chatpdf = catchAsync(async function (req, res, next) {
-  res.render('chat', { chats: req.user.chats });
+  res.render('chatN', { chats: req.user.chats });
 });

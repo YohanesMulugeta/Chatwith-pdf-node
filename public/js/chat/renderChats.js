@@ -3,27 +3,7 @@ import { removeProgress, showProgress } from '../reusables/showProgressBtn.js';
 import Chat from './chatN.js';
 import showError from '../reusables/showError.js';
 import makeRequest from '../reusables/fetch.js';
-
-// export default function renderChatBtns(e) {
-//   const chats = localStorage.getItem('chatsChatpdf');
-//   if (!chats) return loaderChatBtn?.remove();
-
-//   const parent = getSidebar().closest('.chat-column-left-row-one');
-
-//   getSidebar().remove();
-
-//   parent.insertAdjacentHTML('beforeend', `<div class='chat-btn-container'> </div>`);
-
-//   const parsed = Object.entries(JSON.parse(chats));
-
-//   parsed.sort((a, b) => +a[1].lastUpdatedDate - +b[1].lastUpdatedDate);
-
-//   loaderChatBtn.remove();
-
-//   parsed.forEach((chat) => {
-//     renderBtn(chat);
-//   });
-// }
+import { showAlert } from '../reusables/alert.js';
 
 async function handleDeleteChat(e) {
   const targetBtn = e.target.closest('.btn-delete-chat');
@@ -51,26 +31,40 @@ async function handleDeleteChat(e) {
   }
 }
 
-export function handleChatBtns(e) {
+export async function handleChatBtns(e) {
   const chatBtn = e.target.closest('.btn-chat');
+  const innerHTMLBtn = chatBtn.innerHTML;
   const deleteChatBtn = e.target.closest('.btn-delete-chat');
-  if (!chatBtn && !deleteChatBtn) return;
-  if (deleteChatBtn) return handleDeleteChat(e);
+  try {
+    if (!chatBtn && !deleteChatBtn) return;
+    if (deleteChatBtn) return handleDeleteChat(e);
 
-  // making previous chatbtn available
-  const prevActiveBtn = document.querySelector('.active-chat-btn');
-  prevActiveBtn?.classList.remove('active-chat-btn');
-  prevActiveBtn?.removeAttribute('disabled');
+    // making previous chatbtn available
+    const prevActiveBtn = document.querySelector('.active-chat-btn');
 
-  // Disabling current active chat btn
-  chatBtn.classList.add('active-chat-btn');
-  chatBtn.setAttribute('disabled', true);
+    showProgress(chatBtn);
 
-  const chat = new Chat(
-    chatBtn.closest('.chat-btn-delete-container').dataset.chattitle,
-    chatBtn.closest('.chat-btn-delete-container').dataset.chatid
-  );
-  setCurrentChat(chat);
+    prevActiveBtn?.classList.remove('active-chat-btn');
+    prevActiveBtn?.removeAttribute('disabled');
+
+    // Disabling current active chat btn
+    chatBtn.classList.add('active-chat-btn');
+    chatBtn.setAttribute('disabled', true);
+
+    const chatId = chatBtn.closest('.chat-btn-delete-container').dataset.chatid;
+    const { data } = await makeRequest({ url: `/api/v1/pdf/chat/${chatId}` });
+
+    console.log(data);
+
+    const chat = new Chat({ ...data, chatTitle: data.name });
+    setCurrentChat(chat);
+
+    removeProgress(chatBtn, innerHTMLBtn);
+    showAlert('success', 'Successful on loading your data');
+    // setCurrentChat(chat);
+  } catch (err) {
+    showError(err, chatBtn, innerHTMLBtn);
+  }
 }
 
 // ///////////// //

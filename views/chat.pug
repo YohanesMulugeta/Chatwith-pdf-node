@@ -11,7 +11,7 @@ html(lang="en")
     head
         include _head
         script(src="/js/script.js" defer type='module') 
-    body
+    body(style='height:100vh; overflow-y:auto;')
         nav.navbar.navbar-expand-xl.py-1.chat-page
             .container
                 a.navbar-brand(href="/")
@@ -79,21 +79,23 @@ html(lang="en")
                         i.bi.bi-x-circle
                         | Return
             // chat right container
-            .chat-column-right
-                //- .chat-column-right-row-one
-                //-     span.button-dropsection.hidden
-                //-         i.bi.bi-list
-                //-     .chat-title Title
-                // Chat area
-                .chat.chat-column-right-row-two
-                    // chat messages containor
-                    .messages-chat
-                        // filled by js
-                        // user  input with button
-                .chat-column-right-row-three
-                    .input-group.default-input-group
-                        input#user-input.form-control.generate-input(type="text", placeholder="Chat with PDF")
-                        button#submit-button.btn-ask.btn.btn-default.btn-primary(type="button")
-                            i.bi.bi-send
+            //- .chat-column-right
+            //-     //- .chat-column-right-row-one
+            //-     //-     span.button-dropsection.hidden
+            //-     //-         i.bi.bi-list
+            //-     //-     .chat-title Title
+            //-     // Chat area
+            .chat.chat-column-right-row-two
+                // chat messages containor
+                .messages-chat
+                    .d-flex.justify-content-center.loader-chat
+                        .spinner-grow.text-primary.loader(role="status")
+                    // filled by js
+                    // user  input with button
+            
+                .input-group.default-input-group
+                    input#user-input.form-control.generate-input(type="text", placeholder="Chat with PDF")
+                    button#submit-button.btn-ask.btn.btn-default.btn-primary(type="button")
+                        i.bi.bi-send
         
         

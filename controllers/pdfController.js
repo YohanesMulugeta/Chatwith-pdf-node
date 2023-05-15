@@ -73,6 +73,7 @@ exports.processDocument = catchAsync(async function (req, res, next) {
 // --------------------------- Chat
 exports.chat = catchAsync(async function (req, res, next) {
   const { chatId } = req.params;
+  console.log(chatId);
   const { question } = req.body;
 
   if (!question || question.trim() === '')
@@ -109,6 +110,23 @@ exports.chat = catchAsync(async function (req, res, next) {
   user.updateChatModifiedDate(chatId);
 
   res.status(200).json({ status: 'success', data: { response } });
+});
+
+// ------------------------- GET CHAT BY ID
+exports.getChat = catchAsync(async function (req, res, next) {
+  const { chatId } = req.params;
+  const { chats } = await User.findById(req.user._id).select('+chats.chatHistory');
+
+  const chat = chats.id(chatId);
+  if (!chat)
+    return next(
+      new AppError('There is no chat in your chats collection with this chat Id', 404)
+    );
+
+  res.status(200).json({
+    status: 'success',
+    data: chat,
+  });
 });
 
 // ------------------- delete chat

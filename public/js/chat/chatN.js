@@ -8,12 +8,12 @@ class Chat {
   // chatTitle = document.querySelector('.chat-title');
   state = { docName: '', chatTitle: '', history: [] };
 
-  constructor({ chatTitle, docName, chatId, chatHistory }) {
+  constructor({ chatTitle, docName, _id, chatHistory }) {
     this.state.chatTitle = chatTitle;
     this.state.docName = docName;
     // this.chatTitle.textContent = chatTitle;
     this.state.history = chatHistory ? chatHistory : [];
-    this.url = `api/v1/pdf/chat/${chatId}`;
+    this.url = `api/v1/pdf/chat/${_id}`;
 
     this.init();
   }
