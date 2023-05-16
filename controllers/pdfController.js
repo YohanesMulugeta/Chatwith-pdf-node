@@ -61,7 +61,7 @@ exports.processDocument = catchAsync(async function (req, res, next) {
 
   const { parsedDoc } = req;
 
-  const fileNameOnPine = await storeToPinecone(parsedDoc);
+  const fileNameOnPine = await storeToPinecone({ docs: parsedDoc });
 
   // store the new chat
   const user = await User.findById(req.user._id).select('+chats.chatHistory');
@@ -85,9 +85,13 @@ exports.addPdfIntoChat = catchAsync(async function (req, res, next) {
   const { chatId } = req.params;
   const { user, parsedDoc } = req;
 
-  const fileNameOnPine = await user.chats.id(chatId).vectorName;
+  const { vectorName: nameSpace, indexName } = await user.chats.id(chatId);
 
-  await storeToPinecone(parsedDoc, fileNameOnPine, false);
+  await storeToPinecone({
+    docs: parsedDoc,
+    nameSpace,
+    indexName,
+  });
 
   res.status(200).json({
     status: 'success',
@@ -170,7 +174,8 @@ exports.deleteChat = catchAsync(async function (req, res, next) {
     return chat.id === chatId;
   });
 
-  pineconeIndex.delete1({ deleteAll: true, namespace: vectorName });
+  await pineconeIndex.delete1({ deleteAll: true, namespace: vectorName });
+
   if (index !== -1) user.chats.splice(index, 1);
   await user.save({ validateBeforeSave: false });
 

@@ -66,10 +66,10 @@ async function spiltText(text, check = true) {
 
 // ERRORS EMPITY DOCUMENT THAT IS DOCS = []
 
-exports.storeToPinecone = async function (docs, nameSpace, onNewNameSpace = true) {
-  const pineconeIndex = client.Index(process.env.PINECONE_INDEX_NAME);
+exports.storeToPinecone = async function ({ docs, nameSpace, indexName }) {
+  const pineconeIndex = client.Index(indexName || process.env.PINECONE_INDEX_NAME);
 
-  const fileNameOnPine = onNewNameSpace ? `pine-${Date.now()}` : nameSpace;
+  const fileNameOnPine = nameSpace || `pine-${Date.now()}`;
 
   const maxVector = 200;
 
