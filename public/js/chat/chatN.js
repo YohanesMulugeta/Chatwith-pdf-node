@@ -15,6 +15,7 @@ class Chat {
     this.state.docName = docName;
     // this.chatTitle.textContent = chatTitle;
     this.state.history = chatHistory ? chatHistory : [];
+    this.state.chatId = _id;
     this.url = `api/v1/pdf/chat/${_id}`;
 
     this.setCurrentChat(this);

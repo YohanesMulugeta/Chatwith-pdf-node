@@ -3,7 +3,7 @@ import { showProgress, removeProgress } from './reusables/showProgressBtn.js';
 import { showAlert } from './reusables/alert.js';
 import makeRequest from './reusables/fetch.js';
 import Chat from './chat/chatN.js';
-import { handleLeftColHide, handleSidebarExpandHide } from './chat/chatBtns.js';
+import { handleLeftColHide, renderBtn } from './chat/chatBtns.js';
 
 const loader = document.querySelector('.loader-upload')?.querySelector('.loader');
 const input = document.querySelector('input[type="file"]');
@@ -47,7 +47,7 @@ export default async function fetchAndDisplay(fileContainer, isFile = false) {
       // {chatId, chatTitle,docName} = data
 
       //   Creating new chat instance and removing the already existed one
-      new Chat(data);
+      const chat = new Chat(data);
 
       // Progress Indicators
       showAlert('success', 'Successful on uploading your document!');
@@ -55,6 +55,7 @@ export default async function fetchAndDisplay(fileContainer, isFile = false) {
       handleLeftColHide();
       loader.style.display = 'none';
       input.removeAttribute('disabled');
+      renderBtn(chat.state);
       setTimeout(() => {
         // samplePdf.innerHTML = 'Yohanes Mulugeta';
         setChatTitle(data.chatTitle);
@@ -99,4 +100,6 @@ async function extractTextFromTxt(file) {
   const text = await file.text();
   return text;
 }
+
+function appendNewChatBtn() {}
 /////////////////l//////////////////////

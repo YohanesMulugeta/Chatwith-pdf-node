@@ -108,9 +108,9 @@ export function renderBtn(chat) {
   getSidebar().insertAdjacentHTML(
     'afterbegin',
     `
-      <div class='chat-btn-delete-container' data-docname=${chat[0]} data-chattitle=${chat[1].chatTitle}>
-        <button class='btn-sample-pdf btn btn-primary btn-chat'>
-          <i class='bi bi-file-earmark-pdf'></i> ${chat[1].chatTitle}
+      <div class='chat-btn-delete-container' data-chatid=${chat.chatId} data-chattitle=${chat.chatTitle}>
+        <button class='btn-sample-pdf btn btn-primary btn-chat active-chat-btn' disabled=true >
+          <i class='bi bi-file-earmark-pdf'></i> ${chat.chatTitle}
         </button>
         <button class='btn-danger btn btn-delete-chat'>
           <i class='bi bi-archive'></i> 
