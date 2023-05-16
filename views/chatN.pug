@@ -1,115 +1,118 @@
-extends base
-block append head
-    link(rel="stylesheet", href="/assets/styles/chatN.css")
-    //- script(src="/js/script.js" defer type='module') 
-
-
 mixin chatBtn(chat)
     .chat-btn-delete-container(data-chatId=`${chat._id}`)
-      button.btn-sample-pdf.btn.btn-primary.btn-chat
-        i.bi.bi-file-earmark-pdf
-        p= chat.name
-      button.btn-danger.btn.btn-delete-chat
-        i.bi.bi-archive
+        button.btn-sample-pdf.btn.btn-primary.btn-chat
+            i.bi.bi-file-earmark-pdf
+            p= chat.name
+        button.btn-danger.btn.btn-delete-chat
+            i.bi.bi-archive
+doctype html
+html(lang="en")
+    head
+        include _head
+        link(rel="stylesheet", href="/assets/styles/chatN.css")
 
 
-block content
-    section#scroll-top.breadcrumb
-        section.chat-upload-container
-            .upload-chat-btn-container.mobile-hidden 
-                .pdf-uploader
-                    .drop-zone
-                        p#drop-description
-                            i.bi.bi-cloud-arrow-up
-                            | Drag and drop a file here or click to
-                            | upload
-                        input#file(type="file", hidden='', accept=".pdf,.txt")
-                        .d-flex.justify-content-center.loader-upload
-                            .spinner-grow.text-primary.loader(role="status")
-                    .file-info
-                
-                .chat-btn-container.hide-scroll-bar
-                    -for(let i = 0; i< chats.length; i++)
-                        +chatBtn(chats[i])
-                    //- -for(let i = 0; i<= 15; i++)
-                    //-     .chat-btn-delete-container(data-chatId=`alfdjlkfjaklsdjfkds`)
-                    //-         button.btn-sample-pdf.btn.btn-primary.btn-chat
-                    //-             i.bi.bi-file-earmark-pdf 
-                    //-             | Resume
-                    //-         button.btn-danger.btn.btn-delete-chat
-                    //-             i.bi.bi-archive
 
-            .chat-container
-                .messages-container
-                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elitsit amet consectetur adipisicing elit. Dolor, ullam?
-                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
-                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
-                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
-                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
-                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
-                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
-                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
-                    //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
-                    //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
-                .input-send-container
-                    input#user-input.form-control.generate-input(type="text", placeholder="Chat with PDF")
-                    button#submit-button.btn-ask.btn.btn-default.btn-primary(type="button")
-                        i.bi.bi-send
-        
-    button.btn.btn-open-sidebar.hidden-desktop.btn-outline-primary
-        i.bi.bi-arrow-bar-right
-    //- dvi.chat-main-container
-    //-     // chat left container
-    //-     .chat-column-left.mobile-hidden
-    //-         .chat-column-left-row-one
-    //-             // PDF uploader
-    //-             .pdf-uploader
-    //-                 .drop-zone
-    //-                     p#drop-description
-    //-                         i.bi.bi-cloud-arrow-up
-    //-                         | Drag and drop a file here or click to
-    //-                         | upload
-    //-                     input#file(type="file", hidden='', accept=".pdf,.txt")
-    //-                     .d-flex.justify-content-center.loader-upload
-    //-                         .spinner-grow.text-primary.loader(role="status")
-    //-                 .file-info
+    body
+        include _nav
+
+
+        section#scroll-top.breadcrumb
+            section.chat-upload-container
+                .upload-chat-btn-container.mobile-hidden 
+                    .pdf-uploader
+                        .drop-zone
+                            p#drop-description
+                                i.bi.bi-cloud-arrow-up
+                                | Drag and drop a file here or click to
+                                | upload
+                            input#file(type="file", hidden='', accept=".pdf,.txt")
+                            .d-flex.justify-content-center.loader-upload
+                                .spinner-grow.text-primary.loader(role="status")
+                        .file-info
                     
-    //-             .chat-btn-container
-    //-                 -for(let i = 0; i< chats.length; i++)
-    //-                     +chatBtn(chats[i])
+                    .chat-btn-container.hide-scroll-bar
+                        -for(let i = 0; i< chats.length; i++)
+                            +chatBtn(chats[i])
+                        //- -for(let i = 0; i<= 15; i++)
+                        //-     .chat-btn-delete-container(data-chatId=`alfdjlkfjaklsdjfkds`)
+                        //-         button.btn-sample-pdf.btn.btn-primary.btn-chat
+                        //-             i.bi.bi-file-earmark-pdf 
+                        //-             | Resume
+                        //-         button.btn-danger.btn.btn-delete-chat
+                        //-             i.bi.bi-archive
+
+                .chat-container
+                    .messages-container
+                        //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                        //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elitsit amet consectetur adipisicing elit. Dolor, ullam?
+                        //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                        //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                        //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                        //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                        //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                        //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                        //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                        //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                        //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                        //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                        //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                        //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                        //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                        //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                        //- .bot-message.message Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur corporis culpa velit magnam assumenda cum nam nobis soluta vel ipsum placeat quam vitae accusamus maiores aliquid sunt officia dignissimos in, exercitationem quis voluptatum quisquam. Impedit laboriosam magni ipsa cum corporis mollitia nam illum ipsam a, voluptas rem, vitae, fugit iste?
+                        //- .user-message.message Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor, ullam?
+                    .input-send-container
+                        input#user-input.form-control.generate-input(type="text", placeholder="Chat with PDF")
+                        button#submit-button.btn-ask.btn.btn-default.btn-primary(type="button")
+                            i.bi.bi-send
+            
+        button.btn.btn-open-sidebar.hidden-desktop.btn-outline-primary
+            i.bi.bi-arrow-bar-right
+        //- dvi.chat-main-container
+        //-     // chat left container
+        //-     .chat-column-left.mobile-hidden
+        //-         .chat-column-left-row-one
+        //-             // PDF uploader
+        //-             .pdf-uploader
+        //-                 .drop-zone
+        //-                     p#drop-description
+        //-                         i.bi.bi-cloud-arrow-up
+        //-                         | Drag and drop a file here or click to
+        //-                         | upload
+        //-                     input#file(type="file", hidden='', accept=".pdf,.txt")
+        //-                     .d-flex.justify-content-center.loader-upload
+        //-                         .spinner-grow.text-primary.loader(role="status")
+        //-                 .file-info
                         
-    //-             // pdf chat History button
-    //-             // Navigation Bar
-    //-         .chat-column-left-row-two.mt-3
-    //-             button.btn.btn-danger.hidden.close-btn(type="button")
-    //-                 i.bi.bi-x-circle
-    //-                 | Return
-    //-     // chat right container
-    //-     //- .chat-column-right
-    //-     //-     //- .chat-column-right-row-one
-    //-     //-     //-     span.button-dropsection.hidden
-    //-     //-     //-         i.bi.bi-list
-    //-     //-     //-     .chat-title Title
-    //-     //-     // Chat area
-    //-     .chat.chat-column-right-row-two
-    //-         // chat messages containor
-    //-         .messages-chat
-    //-             .d-flex.justify-content-center.loader-chat
-    //-                 .spinner-grow.text-primary.loader(role="status")
-    //-             // filled by js
-    //-             // user  input with button
+        //-             .chat-btn-container
+        //-                 -for(let i = 0; i< chats.length; i++)
+        //-                     +chatBtn(chats[i])
+                            
+        //-             // pdf chat History button
+        //-             // Navigation Bar
+        //-         .chat-column-left-row-two.mt-3
+        //-             button.btn.btn-danger.hidden.close-btn(type="button")
+        //-                 i.bi.bi-x-circle
+        //-                 | Return
+        //-     // chat right container
+        //-     //- .chat-column-right
+        //-     //-     //- .chat-column-right-row-one
+        //-     //-     //-     span.button-dropsection.hidden
+        //-     //-     //-         i.bi.bi-list
+        //-     //-     //-     .chat-title Title
+        //-     //-     // Chat area
+        //-     .chat.chat-column-right-row-two
+        //-         // chat messages containor
+        //-         .messages-chat
+        //-             .d-flex.justify-content-center.loader-chat
+        //-                 .spinner-grow.text-primary.loader(role="status")
+        //-             // filled by js
+        //-             // user  input with button
+            
+        //-         .input-group.default-input-group
+        //-             input#user-input.form-control.generate-input(type="text", placeholder="Chat with PDF")
+        //-             button#submit-button.btn-ask.btn.btn-default.btn-primary(type="button")
+        //-                 i.bi.bi-send
         
-    //-         .input-group.default-input-group
-    //-             input#user-input.form-control.generate-input(type="text", placeholder="Chat with PDF")
-    //-             button#submit-button.btn-ask.btn.btn-default.btn-primary(type="button")
-    //-                 i.bi.bi-send
-    
-    
+        
