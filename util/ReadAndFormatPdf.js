@@ -43,10 +43,9 @@ exports.loadPdf = async function loadPdf(file, isFile, check = true) {
   const splitted = await spiltText(text, check);
 
   //  store in the pinecone
-  const fileNameOnPine = await storeToPinecone(splitted);
 
   //  return the pinecone name_space for the vectors
-  return fileNameOnPine;
+  return splitted;
   // if (!isFile) return spiltText(file, check);
 };
 
@@ -65,24 +64,36 @@ async function spiltText(text, check = true) {
   return output;
 }
 
-async function storeToPinecone(doc) {
+// ERRORS EMPITY DOCUMENT THAT IS DOCS = []
+
+exports.storeToPinecone = async function (docs, nameSpace, onNewNameSpace = true) {
   const pineconeIndex = client.Index(process.env.PINECONE_INDEX_NAME);
 
   const fileNameOnPine = `pine-${Date.now()}`;
 
-  await PineconeStore.fromDocuments(doc, new OpenAIEmbeddings(), {
-    pineconeIndex,
-    namespace: fileNameOnPine,
-  });
+  const maxVector = 200;
+
+  for (let i = 0; i < docs.length; i += maxVector) {
+    await PineconeStore.fromDocuments(
+      docs.slice(i, i + maxVector + 1),
+      new OpenAIEmbeddings(),
+      {
+        pineconeIndex,
+        namespace: fileNameOnPine,
+      }
+    );
+  }
+
+  console.log('success');
 
   console.log(fileNameOnPine);
+
   return fileNameOnPine;
-}
+};
 
 function removeDuplicates(text) {
   const formated = text.split('\n').join('').split('\t').join(' ');
 
   return formated;
 }
-
-// ERRORS EMPITY DOCUMENT THAT IS DOCS = []
+// --------------- Helpers

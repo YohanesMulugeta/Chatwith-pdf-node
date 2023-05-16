@@ -11,7 +11,7 @@ const openai = new OpenAIApi(configuration);
 
 const User = require('../model/userModel');
 
-const { pineconeClient, loadPdf } = require('../util/ReadAndFormatPdf');
+const { pineconeClient, loadPdf, storeToPinecone } = require('../util/ReadAndFormatPdf');
 const makeChain = require('../util/makeChain');
 const catchAsync = require('../util/catchAsync');
 const multerFilter = require('../util/multerFilter');
@@ -53,9 +53,9 @@ exports.processDocument = catchAsync(async function (req, res, next) {
   const originalName =
     req.originalName?.trim() || req.body.originalName || `document-${Date.now()}`;
 
-  const fileNameOnPine = await loadPdf(file, req.fileName);
+  const parsedDoc = await loadPdf(file, req.fileName);
 
-  // const fileNameOnPine = 'lala';
+  const fileNameOnPine = await storeToPinecone(parsedDoc);
 
   // store the new chat
   const user = await User.findById(req.user._id).select('+chats.chatHistory');
@@ -80,6 +80,7 @@ exports.chat = catchAsync(async function (req, res, next) {
     return next(new AppError('You have to provide question!', 400));
 
   const nameSpace = await req.user.chats.id(chatId).vectorName;
+
   // OPEN-AI recommendation to replace new lines with space
   const sanitizedQuestion = question.replace('/n', ' ').trim();
   const pineconeIndex = pineconeClient.Index(process.env.PINECONE_INDEX_NAME);
@@ -95,6 +96,7 @@ exports.chat = catchAsync(async function (req, res, next) {
   const chatHistory = user.chats.id(chatId).chatHistory.slice(-5);
 
   const chain = makeChain(vectorStore);
+
   //Ask a question using chat history
   const response = await chain.call({
     question: sanitizedQuestion,
