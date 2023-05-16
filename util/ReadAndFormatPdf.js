@@ -69,7 +69,7 @@ async function spiltText(text, check = true) {
 exports.storeToPinecone = async function (docs, nameSpace, onNewNameSpace = true) {
   const pineconeIndex = client.Index(process.env.PINECONE_INDEX_NAME);
 
-  const fileNameOnPine = `pine-${Date.now()}`;
+  const fileNameOnPine = onNewNameSpace ? `pine-${Date.now()}` : nameSpace;
 
   const maxVector = 200;
 

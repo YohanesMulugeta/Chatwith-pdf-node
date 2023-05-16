@@ -44,16 +44,19 @@ exports.checkTokenLimit = function (req, res, next) {
   next();
 };
 
-// ----------------------- Store to Pine Cone
-exports.toPinecone = catchAsync(async function (req, res, next) {});
+exports.parseDoc = catchAsync(async function (req, res, next) {
+  const file = req.fileName || req.body.text;
+  req.parsedDoc = await loadPdf(file, req.fileName);
+
+  next();
+});
 
 // ----------------------- PROCESS pdf
 exports.processDocument = catchAsync(async function (req, res, next) {
-  const file = req.fileName || req.body.text;
   const originalName =
     req.originalName?.trim() || req.body.originalName || `document-${Date.now()}`;
 
-  const parsedDoc = await loadPdf(file, req.fileName);
+  const { parsedDoc } = req;
 
   const fileNameOnPine = await storeToPinecone(parsedDoc);
 
@@ -68,6 +71,22 @@ exports.processDocument = catchAsync(async function (req, res, next) {
     chatTitle: originalName,
     _id: updatedUser.chats.slice(-1)[0]._id,
   });
+});
+
+// ------------ Add a document oto analready exsted document
+exports.addPdfIntoChat = catchAsync(async function (req, res, next) {
+  const { chatId } = req.params;
+  const { user, parsedDoc } = req;
+
+  const fileNameOnPine = await user.chats.id(chatId).vectorName;
+
+  await storeToPinecone(parsedDoc, fileNameOnPine, false);
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Document added to your chat successFully',
+  });
+  // const file = req.
 });
 
 // --------------------------- Chat
