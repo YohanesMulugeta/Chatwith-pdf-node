@@ -51,6 +51,7 @@ const userSchema = new mongoose.Schema(
     tokenLimit: Number,
     signedUpWithGoogle: Boolean,
     createdAt: Date,
+    numOfMultipleChats: Number,
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

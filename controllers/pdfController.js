@@ -51,6 +51,9 @@ exports.parseDoc = catchAsync(async function (req, res, next) {
   next();
 });
 
+// Check num of chats middle ware
+exports.checkNumOfChats = catchAsync(async function (req, res, next) {});
+
 // ----------------------- PROCESS pdf
 exports.processDocument = catchAsync(async function (req, res, next) {
   const originalName =
@@ -62,7 +65,11 @@ exports.processDocument = catchAsync(async function (req, res, next) {
 
   // store the new chat
   const user = await User.findById(req.user._id).select('+chats.chatHistory');
-  user.chats.push({ name: originalName, vectorName: fileNameOnPine });
+  user.chats.push({
+    name: originalName,
+    vectorName: fileNameOnPine,
+    indexName: process.env.PINECONE_INDEX_NAME,
+  });
   const updatedUser = await user.save({ validateBeforeSave: false });
 
   res.status(200).json({
