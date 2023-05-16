@@ -52,6 +52,10 @@ const userSchema = new mongoose.Schema(
     signedUpWithGoogle: Boolean,
     createdAt: Date,
     numOfMultipleChats: Number,
+    uploadPerDay: { type: Number, min: 1 },
+    lastUploadTime: Date,
+    questionsPerDay: Number,
+    lastAskTime: Date,
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
