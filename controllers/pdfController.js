@@ -105,11 +105,13 @@ exports.chat = catchAsync(async function (req, res, next) {
   if (!question || question.trim() === '')
     return next(new AppError('You have to provide question!', 400));
 
-  const nameSpace = await req.user.chats.id(chatId).vectorName;
+  const { vectorName: nameSpace, indexName } = await req.user.chats.id(chatId);
 
   // OPEN-AI recommendation to replace new lines with space
   const sanitizedQuestion = question.replace('/n', ' ').trim();
-  const pineconeIndex = pineconeClient.Index(process.env.PINECONE_INDEX_NAME);
+  const pineconeIndex = pineconeClient.Index(
+    indexName || process.env.PINECONE_INDEX_NAME
+  );
 
   // vectore store
   const vectorStore = await PineconeStore.fromExistingIndex(new OpenAIEmbeddings(), {
