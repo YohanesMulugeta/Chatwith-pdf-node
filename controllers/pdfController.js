@@ -182,6 +182,40 @@ exports.deleteChat = catchAsync(async function (req, res, next) {
   res.status(203).json({ message: 'success' });
 });
 
+// ------------------- EDIT CHAT TITLE
+exports.editChatTitle = catchAsync(async function (req, res, next) {
+  const { chatId } = req.params;
+  const { user } = req;
+  const chat = user.chats.id(chatId);
+
+  if (!chat) return next(new AppError('No chat with this Id', 404));
+
+  user.chats.id(chatId).name = req.body.chatTitle || chat.name;
+
+  await user.save({ validateBeforeSave: false });
+
+  res
+    .status(200)
+    .json({ status: 'success', message: 'Your chat Title has changed successfully' });
+});
+
+// ------------ Clear history
+exports.clearChatHistory = catchAsync(async function (req, res, next) {
+  const { chatId } = req.params;
+  const user = await User.findById(req.user._id).select('+chats.chatHistory');
+
+  const chat = user.chats.id(chatId);
+  if (!chat) return next(new AppError('No chat with this Id', 404));
+
+  user.chats.id(chatId).chatHistory = [];
+  await user.save({ validateBeforeSave: false });
+
+  res.status(203).json({
+    status: 'success',
+    message: 'Chat history cleared successfully',
+  });
+});
+
 // // --------------------- Translate
 // exports.translateDocument = catchAsync(async function (req, res, next) {
 //   if (!req.body.language) return next();

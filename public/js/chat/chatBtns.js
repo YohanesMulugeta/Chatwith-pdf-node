@@ -6,7 +6,6 @@ import { showAlert } from '../reusables/alert.js';
 import { uploadPdf } from '../uploadN.js';
 
 const sidebar = document.querySelector('.upload-chat-btn-container');
-const addDocumentInput = document.getElementById('add-file');
 
 const baseUrl = '/api/v1/pdf/';
 
@@ -41,6 +40,8 @@ export async function handleChatBtns(e) {
   const innerHTMLBtn = chatBtn?.innerHTML;
   const deleteChatBtn = e.target.closest('.btn-delete-chat');
   const chatTools = e.target.closest('.chat-tools');
+
+  console.log(chatTools);
   try {
     if (!chatBtn && !deleteChatBtn && !chatTools) return;
     if (deleteChatBtn) return handleDeleteChat(e);
@@ -122,17 +123,34 @@ async function deleteChat(btn, chatid, intervalId) {
 }
 
 export function renderBtn(chat) {
+  const prevActiveBtn = document.querySelector('.active-chat-btn');
+  prevActiveBtn?.classList.remove('active-chat-btn');
+  prevActiveBtn?.removeAttribute('disabled');
+
   getSidebar().insertAdjacentHTML(
     'afterbegin',
-    `
-      <div class='chat-btn-delete-container' data-chatid=${chat.chatId} data-chattitle=${chat.chatTitle}>
-        <button class='btn-sample-pdf btn btn-primary btn-chat active-chat-btn' disabled=true >
-          <i class='bi bi-file-earmark-pdf'></i> ${chat.chatTitle}
+    `<div class="chat-btn-delete-container" data-chatid=${chat.chatId} data-chattitle=${chat.chatTitle}>
+      <div class="btn-chat-delete">
+        <button class="btn-sample-pdf btn btn-primary btn-chat active-chat-btn" disabled="true">
+          <i class="bi bi-file-earmark-pdf"></i><p>${chat.chatTitle}</p>
         </button>
-        <button class='btn-danger btn btn-delete-chat'>
-          <i class='bi bi-archive'></i> 
+        <button class="btn-danger btn btn-delete-chat">
+          <i class="bi bi-archive"></i>
         </button>
-      </div>`
+      </div>
+      <div class="chat-tools">
+        <buton class="btn-add-document btn btn-tool">
+          <i class="bi bi-journal-plus"></i>
+          <input id="add-file" type="file" hidden="" accept=".pdf,.txt">
+        </buton>
+        <buton class="btn-reset-chat btn btn-tool">
+          <i class="bi bi-arrow-counterclockwise"></i>
+        </buton>
+        <buton class="btn-edit-document-title btn btn-tool">
+          <i class="bi bi-pencil-square"></i>
+        </buton>
+      </div>
+    </div>`
   );
 }
 
@@ -153,20 +171,61 @@ export function handleSidebarExpandHide() {
 
 export async function handleChatTools(e) {
   try {
+    console.log('here to add');
+    const addDocumentInput = document.getElementById('add-file');
+    if (e.target.closest('.btn-reset-chat')) return handleResetChat(e);
+    if (e.target.closest('.btn-edit-document-title')) return handleEditTitle(e);
+
     if (e.target.closest('.btn-add-document')) addDocumentInput.click();
+
+    const inputChangeHandler = function (e) {
+      const chatId = getChatId(e.target);
+      console.log('lala');
+      e.target.setAttribute('disabled', true);
+      addDocument(chatId, e.target);
+
+      addDocument.removeEventListener('click', this.handler);
+    };
+
+    const bindOpt = {};
+    const handler = inputChangeHandler.bind();
+    bindOpt.handler = handler;
+
+    addDocumentInput?.addEventListener('change', handler);
   } catch (err) {}
 }
-
-addDocumentInput?.addEventListener('change', (e) => {
-  const chatId = getChatId(e.target);
-  e.target.setAttribute('disabled', true);
-  addDocument(chatId, e.target);
-});
 
 async function addDocument(chatId, inputField) {
   const url = `${baseUrl}adddocument/${chatId}`;
 
   await uploadPdf({ file: inputField.files[0], endPoint: url, inputField });
+}
+
+async function handleResetChat(e) {
+  const btnReset = e.target.closest('.btn-reset-chat');
+  const chatLoader = document.querySelector('.chat-loader');
+  try {
+    const chatId = getChatId(e.target);
+    btnReset.setAttribute('disabled', true);
+
+    chatLoader?.classList.remove('hidden');
+
+    await makeRequest({ method: 'patch', url: `${baseUrl}chat/${chatId}` });
+
+    showAlert('success', 'Chat history cleared successfully');
+  } catch (err) {
+    showAlert(
+      'danger',
+      err.response?.data?.message || err.message || 'Something went wrong '
+    );
+  }
+  chatLoader?.classList.add('hidden');
+  btnReset.removeAttribute('disabled');
+}
+
+async function handleEditTitle(e) {
+  try {
+  } catch (err) {}
 }
 
 // helpers

@@ -27,7 +27,11 @@ class Chat {
     document.querySelector('.messages-container').remove();
     this.messagesInputContainer.insertAdjacentHTML(
       'afterbegin',
-      `<div class='messages-container'></div>`
+      `<div class='messages-container'>
+        <div class='d-flex justify-content-center chat-loader hidden'>
+          <div class='spinner-grow text-primary loader' role="status"></div> 
+        </div>
+      </div>`
     );
     this.chatContainer = document.querySelector('.messages-container');
     this.generateBtn.addEventListener('click', this.handleGenerateBtn);

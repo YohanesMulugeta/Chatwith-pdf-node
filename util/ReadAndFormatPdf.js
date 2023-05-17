@@ -61,6 +61,8 @@ async function spiltText(text, check = true) {
 
   const output = await splitter.createDocuments([text]);
 
+  console.log('parsed end');
+
   return output;
 }
 
