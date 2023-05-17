@@ -40,6 +40,13 @@ export async function handleChatBtns(e) {
     if (!chatBtn && !deleteChatBtn) return;
     if (deleteChatBtn) return handleDeleteChat(e);
 
+    const toggleChatTools = (btn) => {
+      btn
+        ?.closest('.chat-btn-delete-container')
+        ?.querySelector('.chat-tools')
+        .classList.toggle('hidden');
+    };
+
     // making previous chatbtn available
     const prevActiveBtn = document.querySelector('.active-chat-btn');
 
@@ -47,6 +54,7 @@ export async function handleChatBtns(e) {
 
     prevActiveBtn?.classList.remove('active-chat-btn');
     prevActiveBtn?.removeAttribute('disabled');
+    toggleChatTools(prevActiveBtn);
 
     // Disabling current active chat btn
     chatBtn.classList.add('active-chat-btn');
@@ -57,7 +65,10 @@ export async function handleChatBtns(e) {
     const { data } = await makeRequest({ url: `/api/v1/pdf/chat/${chatId}` });
 
     const chat = new Chat({ ...data, chatTitle: data.name });
+
+    toggleChatTools(chatBtn);
     // setCurrentChat(chat);
+
     handleSidebarExpandHide();
 
     removeProgress(chatBtn, innerHTMLBtn);

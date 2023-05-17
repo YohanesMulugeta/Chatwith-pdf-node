@@ -1,10 +1,20 @@
 mixin chatBtn(chat)
     .chat-btn-delete-container(data-chatId=`${chat._id}`)
-        button.btn-sample-pdf.btn.btn-primary.btn-chat
-            i.bi.bi-file-earmark-pdf
-            p= chat.name
-        button.btn-danger.btn.btn-delete-chat
-            i.bi.bi-archive
+        .btn-chat-delete
+            button.btn-sample-pdf.btn.btn-primary.btn-chat
+                i.bi.bi-file-earmark-pdf
+                p= chat.name
+            button.btn-danger.btn.btn-delete-chat
+                i.bi.bi-archive
+        .chat-tools.hidden
+            buton.btn-add-document.btn.btn-tool
+                i.bi.bi-journal-plus
+            buton.btn-reset-chat.btn.btn-tool
+                i.bi.bi-arrow-counterclockwise
+            buton.btn-edit-document-title.btn.btn-tool
+                i.bi.bi-pencil-square
+            
+            
 doctype html
 html(lang="en")
     head
