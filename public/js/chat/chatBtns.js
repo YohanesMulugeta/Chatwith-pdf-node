@@ -3,8 +3,12 @@ import Chat from './chatN.js';
 import showError from '../reusables/showError.js';
 import makeRequest from '../reusables/fetch.js';
 import { showAlert } from '../reusables/alert.js';
+import { uploadPdf } from '../uploadN.js';
 
 const sidebar = document.querySelector('.upload-chat-btn-container');
+const addDocumentInput = document.getElementById('add-file');
+
+const baseUrl = '/api/v1/pdf/';
 
 async function handleDeleteChat(e) {
   const targetBtn = e.target.closest('.btn-delete-chat');
@@ -36,9 +40,11 @@ export async function handleChatBtns(e) {
   const chatBtn = e.target.closest('.btn-chat');
   const innerHTMLBtn = chatBtn?.innerHTML;
   const deleteChatBtn = e.target.closest('.btn-delete-chat');
+  const chatTools = e.target.closest('.chat-tools');
   try {
-    if (!chatBtn && !deleteChatBtn) return;
+    if (!chatBtn && !deleteChatBtn && !chatTools) return;
     if (deleteChatBtn) return handleDeleteChat(e);
+    if (chatTools) return handleChatTools(e);
 
     const toggleChatTools = (btn) => {
       btn
@@ -61,8 +67,8 @@ export async function handleChatBtns(e) {
 
     // console.log(chatBtn);
 
-    const chatId = chatBtn.closest('.chat-btn-delete-container').dataset.chatid;
-    const { data } = await makeRequest({ url: `/api/v1/pdf/chat/${chatId}` });
+    const chatId = getChatId(chatBtn);
+    const { data } = await makeRequest({ url: `${baseUrl}chat/${chatId}` });
 
     const chat = new Chat({ ...data, chatTitle: data.name });
 
@@ -143,4 +149,27 @@ export function handleLeftColHide(e) {
 export function handleSidebarExpandHide() {
   sidebar.classList.toggle('mobile-hidden');
   // console.log(expandSideBar.closest('.btn-open-sidebar').firstChild);
+}
+
+export async function handleChatTools(e) {
+  try {
+    if (e.target.closest('.btn-add-document')) addDocumentInput.click();
+  } catch (err) {}
+}
+
+addDocumentInput?.addEventListener('change', (e) => {
+  const chatId = getChatId(e.target);
+  e.target.setAttribute('disabled', true);
+  addDocument(chatId, e.target);
+});
+
+async function addDocument(chatId, inputField) {
+  const url = `${baseUrl}adddocument/${chatId}`;
+
+  await uploadPdf({ file: inputField.files[0], endPoint: url, inputField });
+}
+
+// helpers
+function getChatId(el) {
+  return el.closest('.chat-btn-delete-container').dataset.chatid;
 }

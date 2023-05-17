@@ -15,60 +15,7 @@ export function setChatTitle(title) {
 export default async function fetchAndDisplay(fileContainer, isFile = false) {
   input.setAttribute('disabled', true);
   const file = isFile ? fileContainer : fileContainer.dataTransfer.items[0].getAsFile();
-  const fileReader = new FileReader();
-
-  fileReader.onload = async function () {
-    try {
-      // progress indicators
-      loader.style.display = 'block';
-      const { type } = file;
-      if (type !== 'application/pdf' && type !== 'text/plain')
-        throw new Error(`This file format ${type} is not supported.`);
-
-      const text =
-        type === 'application/pdf'
-          ? await extractTextFromPdf(file)
-          : await extractTextFromTxt(file);
-
-      // return console.log(file.type);
-      //   console.log(file);
-      //   dataTobeSent.text = text;
-      const dataTobeSent = {
-        text,
-        originalName: file.name,
-      };
-
-      const data = await makeRequest({
-        dataTobeSent,
-        method: 'post',
-        url: `/api/v1/pdf/processpdf`,
-      });
-
-      // {chatId, chatTitle,docName} = data
-
-      //   Creating new chat instance and removing the already existed one
-      const chat = new Chat(data);
-
-      // Progress Indicators
-      showAlert('success', 'Successful on uploading your document!');
-      // handleSidebarExpandHide();
-      handleLeftColHide();
-      loader.style.display = 'none';
-      input.removeAttribute('disabled');
-      renderBtn(chat.state);
-      setTimeout(() => {
-        // samplePdf.innerHTML = 'Yohanes Mulugeta';
-        setChatTitle(data.chatTitle);
-      }, 1000);
-    } catch (err) {
-      input.removeAttribute('disabled');
-      const message = err.response?.data?.message || err.message;
-      showAlert('danger', message);
-
-      loader.style.display = 'none';
-    }
-  };
-  fileReader.readAsArrayBuffer(file);
+  uploadPdf({ file });
 }
 
 // /////////////////// //
@@ -101,5 +48,66 @@ async function extractTextFromTxt(file) {
   return text;
 }
 
-function appendNewChatBtn() {}
 /////////////////l//////////////////////
+export async function uploadPdf({ file, endPoint, inputField }) {
+  const fileReader = new FileReader();
+
+  fileReader.onload = async function () {
+    try {
+      // progress indicators
+      loader.style.display = 'block';
+      const { type } = file;
+      if (type !== 'application/pdf' && type !== 'text/plain')
+        throw new Error(`This file format ${type} is not supported.`);
+
+      const text =
+        type === 'application/pdf'
+          ? await extractTextFromPdf(file)
+          : await extractTextFromTxt(file);
+
+      // return console.log(file.type);
+      //   console.log(file);
+      //   dataTobeSent.text = text;
+      const dataTobeSent = {
+        text,
+        originalName: file.name,
+      };
+
+      const data = await makeRequest({
+        dataTobeSent,
+        method: 'post',
+        url: endPoint || `/api/v1/pdf/processpdf`,
+      });
+
+      // {chatId, chatTitle,docName} = data
+
+      //   Creating new chat instance and removing the already existed one
+      if (!endPoint) {
+        const chat = new Chat(data);
+        renderBtn(chat.state);
+      }
+      loader.style.display = 'none';
+
+      // Progress Indicators
+      showAlert('success', 'Successful on uploading your document!');
+      // handleSidebarExpandHide();
+      handleLeftColHide();
+      (inputField && inputField.removeAttribute('disabled')) ||
+        input.removeAttribute('disabled');
+
+      setTimeout(() => {
+        // samplePdf.innerHTML = 'Yohanes Mulugeta';
+        endPoint || setChatTitle(data.chatTitle);
+      }, 1000);
+    } catch (err) {
+      (inputField && inputField.removeAttribute('disabled')) ||
+        input.removeAttribute('disabled');
+
+      const message = err.response?.data?.message || err.message;
+      showAlert('danger', message);
+
+      loader.style.display = 'none';
+    }
+  };
+  fileReader.readAsArrayBuffer(file);
+}

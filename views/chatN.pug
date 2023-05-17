@@ -9,6 +9,7 @@ mixin chatBtn(chat)
         .chat-tools.hidden
             buton.btn-add-document.btn.btn-tool
                 i.bi.bi-journal-plus
+                input#add-file(type="file", hidden='', accept='.pdf,.txt')
             buton.btn-reset-chat.btn.btn-tool
                 i.bi.bi-arrow-counterclockwise
             buton.btn-edit-document-title.btn.btn-tool
