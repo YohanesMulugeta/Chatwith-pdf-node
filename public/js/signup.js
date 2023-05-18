@@ -33,7 +33,7 @@ async function handleSignup(e) {
     // REDIRECT
     setTimeout(() => {
       // modal.hide();
-      location.assign('/features');
+      location.assign('/chat');
     }, 2000);
   } catch (err) {
     showError(err, btn, 'REGISTER NOW!');
