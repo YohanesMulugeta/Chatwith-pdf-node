@@ -1,5 +1,5 @@
 mixin pricingCard(plan)
-    .card.card-pricing(data-plan=plan._id, data-plan-name=plan.name)
+    .card.card-pricing(data-plan=plan._id, data-plan-name=plan.name, class=plan.name)
         .card--header2
             h1.entry= plan.name.slice(0,1).toUpperCase() + plan.name.slice(1)
             span.main
@@ -8,15 +8,24 @@ mixin pricingCard(plan)
                     -if(plan.name !== 'free')
                         p.tag /Month
                         span.badge.badge--small 10% OFF
-            -if(plan.name === 'premium')
-                h2.moto= `Unlimited Access To Our Features.`
-            -else 
-                h2.moto= `Analyse ${plan.tokenLimit/1000}K words per month`
+            
+            //- h2.moto You can upload up to 
+                span.upload-tokens= `${plan.uloadTokenLimit/1000000} Million ` 
+                | tokens per month
 
         .description
             ul.description--list
-                li.list Advantage 1
-                li.list Advantage 2
+                li.list Up to
+                    span.price-advantage= `${plan.uloadTokenLimit/1000000} Million ` 
+                    | upload tokens
+                    
+                li.list Up to
+                    span.price-advantage= ` ${plan.conversationTokenLimit/1000000} Million ` 
+                    | Conversation tokens
+                    
+                li.list Up to
+                    span.price-advantage= ` ${plan.maxChats} ` 
+                    | Chat/Conversation windows. you can just delete one whenever you want to add another window.
             .nav-item.text-center.action-buttons.pricing-buttons
                 -if(!user)
                     a.btn-outline-primary.btn.my-2.my-lg-3.mx-2.px-4.btn-login(href="/login" )

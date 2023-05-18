@@ -29,7 +29,7 @@ exports.getCheckoutSession = catchAsync(async function (req, res, next) {
       {
         price_data: {
           currency: 'eur',
-          unit_amount: plan.price * 100,
+          unit_amount: (plan.price * 100).toFixed(0),
           product_data: {
             name: plan.name,
             // description: 'Subscription to our feature',

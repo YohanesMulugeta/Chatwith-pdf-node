@@ -11,7 +11,7 @@
   --black: #121212;
   --dpurple: #602080;
   --ddpurple: #470b65;
-  --purple: #b030b0;
+  --purple: #2584ff;
   --lpurple: #fff1ff;
   --llpurple: #ffe9ff;
   /*CUSTOMIZED PRIMARY COLORS*/
@@ -502,9 +502,15 @@ For smaller screens
   padding-top: 10em;
 }
 
-.diamond {
-  transform: scale(1.05);
+.premium {
+  transform: scale(1.05) translateY(-3%);
   border: 5px solid var(--purple) !important;
+}
+
+.price-advantage {
+  font-weight: bold;
+  color: #000;
+  font-size: 16px;
 }
 
 .float-word-count {
@@ -850,4 +856,9 @@ input:checked + .slider:before {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.section-pricing {
+  display: flex;
+  flex-wrap: wrap;
 }

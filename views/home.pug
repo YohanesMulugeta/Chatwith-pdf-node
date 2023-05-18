@@ -110,16 +110,10 @@ block content
             h2.fw-bold.display-5 Flexible and transparent pricing
             p
                 | Whatever your status, our offers evolve according to your needs.
-            .pricing-toggler
-                span Monthly
-                label.switch
-                    input.checkbox(type="checkbox", data-value="true")
-                    span.slider.round
-                span Yearly
-    section.side.justify-content-center
-        +pricingCard({name: 'free',id: 'lalanew', tokenLimit: 5000, price: 0, price2: 0})
-        +pricingCard({name: 'standard',id: 'lulu', tokenLimit: 10000, price: 24, price2: 80})
-        +pricingCard({name: 'premium', id: 'lala', price: 40, price2: 200 })
+    section.side.justify-content-center.section-pricing
+        -for(let i = 0; i < plans.length; i++)
+            +pricingCard(plans[i])
+        
         //- .card
         //-     .card--header2
         //-         h1.entry Normal
