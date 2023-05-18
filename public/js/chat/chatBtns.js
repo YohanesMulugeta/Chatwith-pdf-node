@@ -150,6 +150,7 @@ export async function handleChatTools(e) {
     const addDocumentInput = document.getElementById('add-file');
     if (e.target.closest('.btn-reset-chat')) return handleResetChat(e);
 
+    addDocumentInput.value = '';
     addDocumentInput?.removeEventListener('change', inputChangeHandler);
     addDocumentInput?.addEventListener('change', inputChangeHandler);
 

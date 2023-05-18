@@ -76,6 +76,7 @@ dropZone?.addEventListener('drop', async (e) => {
 });
 
 dropZone?.addEventListener('click', () => {
+  input.value = '';
   input.click();
 });
 

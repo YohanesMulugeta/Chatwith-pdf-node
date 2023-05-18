@@ -94,6 +94,17 @@ exports.processDocument = catchAsync(async function (req, res, next) {
 
   const { parsedDoc, tokens } = req;
 
+  if (
+    req.originalUrl.endsWith('/processpdf') &&
+    req.user.chats.length >= req.user.subscription.maxChats
+  )
+    return next(
+      new AppError(
+        'You have reached your max chat windown. Please delete one chat to proceed.',
+        400
+      )
+    );
+
   const fileNameOnPine = await storeToPinecone({ docs: parsedDoc });
 
   // store the new chat
