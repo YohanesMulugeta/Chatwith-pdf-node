@@ -32,9 +32,9 @@ block content
         .row.text-center
             h2.fw-bold.display-5 Monthly pricing
             h4.text-purple.fw-bold   Whatever your status, our offers evolve according to your needs. 
-        section.side.justify-content-center.section-pricing
-            -for(let i = 0; i < plans.length; i++)
-                +pricingCard(plans[i])
+    section.side.justify-content-center.section-pricing.mt-3
+        -for(let i = 0; i < plans.length; i++)
+            +pricingCard(plans[i])
 
     //- section.container
     //-     .row.text-center
