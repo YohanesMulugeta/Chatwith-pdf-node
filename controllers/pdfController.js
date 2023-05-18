@@ -38,6 +38,8 @@ exports.uploadPdf = upload.single('document');
 
 // ------------------------ Check Token LImit
 exports.checkTokenLimit = function (req, res, next) {
+  // ---------- TODO: token based controll
+  const { tokens } = req;
   if (req.user.tokenLimit <= 0)
     return next(new AppError('You dont have enough token to perform this action.', 400));
 
@@ -46,7 +48,9 @@ exports.checkTokenLimit = function (req, res, next) {
 
 exports.parseDoc = catchAsync(async function (req, res, next) {
   const file = req.fileName || req.body.text;
-  req.parsedDoc = await loadPdf(file, req.fileName);
+  const { splitted: parsedDoc, tokens } = await loadPdf(file, req.fileName);
+  req.parsedDoc = parsedDoc;
+  req.tokens = tokens;
 
   next();
 });

@@ -40,12 +40,17 @@ exports.loadPdf = async function loadPdf(file, isFile, check = true) {
     text = removeDuplicates(file);
   }
 
+  // const tokens = encode(text).length;
+  const tokens = text.length / 3.8;
+
   const splitted = await spiltText(text, check);
+
+  console.log(tokens);
 
   //  store in the pinecone
 
   //  return the pinecone name_space for the vectors
-  return splitted;
+  // return { splitted, tokens };
   // if (!isFile) return spiltText(file, check);
 };
 

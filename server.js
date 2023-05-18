@@ -11,7 +11,7 @@ app.on('uncaughtException', (err) => {
   // process.exit();
 });
 
-const db = process.env.DB.replace('<PASSWORD>', process.env.DB_PASSWORD);
+const db = process.env.DB.replace('<password>', process.env.DB_PASSWORD);
 
 (async () => {
   try {

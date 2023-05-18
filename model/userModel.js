@@ -48,14 +48,10 @@ const userSchema = new mongoose.Schema(
     subscription: { type: mongoose.Schema.ObjectId, ref: 'plan' },
     chats: [chatsSchema],
     subscriptionUpdatedAt: Date,
-    tokenLimit: Number,
+    conversationTokens: Number,
+    uploadTokens: Number,
     signedUpWithGoogle: Boolean,
     createdAt: Date,
-    numOfMultipleChats: Number,
-    uploadPerDay: { type: Number, min: 1 },
-    lastUploadTime: Date,
-    questionsPerDay: Number,
-    lastAskTime: Date,
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
@@ -92,6 +88,7 @@ userSchema.pre('save', function (next) {
   next();
 });
 
+// Email verification and Created At
 userSchema.pre('save', function (next) {
   if (this.isNew) {
     this.createdAt = Date.now();
@@ -101,6 +98,7 @@ userSchema.pre('save', function (next) {
   next();
 });
 
+// Creating name
 // Formate Name
 userSchema.pre('save', function (next) {
   if (!this.isModified('name')) return next();
@@ -115,11 +113,16 @@ userSchema.pre('save', function (next) {
   next();
 });
 
+// new subscriptions
 userSchema.pre('save', async function (next) {
   if (!this.isModified('subscription')) return next();
 
-  this.tokenLimit = (await Plan.findById(this.subscription)).tokenLimit;
+  const plan = await Plan.findById(this.subscription);
+
+  this.subscription = plan._id;
   this.subscriptionUpdatedAt = Date.now();
+  this.conversationTokens = plan.conversationTokenLimit;
+  this.uploadTokens = plan.uloadTokenLimit;
 
   next();
 });
@@ -129,25 +132,27 @@ userSchema.pre('save', async function (next) {
   if (!this.isNew) return next();
 
   const filterObj = {
-    name: this.role === 'user' ? 'free' : 'premium',
+    name: this.role === 'user' ? 'free' : 'gold',
   };
 
   const plan = await Plan.findOne(filterObj);
+
   this.subscription = plan._id;
-  this.tokenLimit = plan.tokenLimit;
   this.subscriptionUpdatedAt = Date.now();
+  this.conversationTokens = plan.conversationTokenLimit;
+  this.uploadTokens = plan.uloadTokenLimit;
 
   next();
 });
 
 // SET NEGATIVE TOKEN LIMITS TO ZERO
-userSchema.pre('save', function (next) {
-  if (!this.isModified('tokenLimit')) return next();
+// userSchema.pre('save', function (next) {
+//   if (!this.isModified('tokenLimit')) return next();
 
-  if (this.tokenLimit < 500) this.tokenLimit = 0;
+//   if (this.tokenLimit < 500) this.tokenLimit = 0;
 
-  next();
-});
+//   next();
+// });
 
 // for updating password
 userSchema.pre(/AndUpdate$/, async function (next) {
@@ -179,21 +184,24 @@ userSchema.pre(/^find/, function (next) {
 userSchema.pre(/AndUpdate$/, async function (next) {
   if (!this._update?.plan) return next();
 
-  this._update.subscription = (
-    await Plan.findOne({ name: this._update.plan.toLowerCase() })
-  )._id;
+  const plan = await Plan.findOne({ name: this._update.plan.toLowerCase() });
 
-  next();
-});
-
-userSchema.pre(/Update$/, async function (next) {
-  if (!this._update?.subscription) return next();
-
-  this._update.tokenLimit = (await Plan.findById(this._update.subscription)).tokenLimit;
+  this._update.subscription = plan._id;
   this._update.subscriptionUpdatedAt = Date.now();
+  this._update.conversationTokens = plan.conversationTokenLimit;
+  this._update.uploadTokens = plan.uloadTokenLimit;
 
   next();
 });
+
+// userSchema.pre(/Update$/, async function (next) {
+//   if (!this._update?.subscription) return next();
+
+//   this._update.tokenLimit = (await Plan.findById(this._update.subscription)).tokenLimit;
+//   this._update.subscriptionUpdatedAt = Date.now();
+
+//   next();
+// });
 
 // --------------------------- METHODS
 userSchema.methods.isCorrect = async function (candidatePass) {
@@ -229,6 +237,18 @@ userSchema.methods.isPassChangedAfter = function (date) {
 
 userSchema.methods.updateChatModifiedDate = async function (id) {
   this.chats.id(id).lastUpdatedAt = Date.now();
+
+  await this.save({ validateBeforeSave: false });
+};
+
+userSchema.methods.updateUploadTokens = async function (tokens) {
+  this.uploadTokens -= tokens;
+
+  await this.save({ validateBeforeSave: false });
+};
+
+userSchema.methods.updateConversationTokens = async function (tokens) {
+  this.conversationTokens -= tokens;
 
   await this.save({ validateBeforeSave: false });
 };

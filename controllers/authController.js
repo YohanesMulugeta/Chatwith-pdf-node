@@ -458,14 +458,14 @@ exports.updateMe = catchAsync(async function (req, res, next) {
     data,
     'role',
     'subscription',
+    'subscriptionUpdatedAt',
+    'conversationTokens',
+    'uploadTokens',
     'plan',
     'passwordChangedAt',
     'resetToken',
     'resetTokenExpiry',
-    'signedUpWithGoogle',
-    'wordsUpdatedAt',
-    'wordsLeft',
-    'userName'
+    'signedUpWithGoogle'
   );
 
   Object.keys(filteredData).forEach((key) => {
