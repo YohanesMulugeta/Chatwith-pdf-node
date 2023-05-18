@@ -4,6 +4,7 @@ import showError from '../reusables/showError.js';
 import makeRequest from '../reusables/fetch.js';
 import { showAlert } from '../reusables/alert.js';
 import { uploadPdf } from '../uploadN.js';
+import { resetMessageInputContainer } from './chatN.js';
 
 const sidebar = document.querySelector('.upload-chat-btn-container');
 
@@ -105,6 +106,7 @@ function handleUndo(e) {
   }, 1000);
 }
 
+// --------- Delete chat
 async function deleteChat(btn, chatid, intervalId) {
   clearInterval(intervalId);
   showProgress(btn);
@@ -122,6 +124,7 @@ async function deleteChat(btn, chatid, intervalId) {
   }, 1500);
 }
 
+// ------------- render new chat btn
 export function renderBtn(chat) {
   resetPrevActiveBtn();
 
@@ -139,20 +142,6 @@ export function renderBtn(chat) {
       ${chatToolsHtml}
     </div>`
   );
-}
-
-function getSidebar() {
-  return document.querySelector('.chat-btn-container');
-}
-
-export function handleLeftColHide(e) {
-  if (e) if (!e.target.closest('.btn-chat') && !e.target.closest('.close-btn')) return;
-
-  sidebar.classList.add('mobile-hidden');
-}
-
-export function handleSidebarExpandHide() {
-  sidebar.classList.toggle('mobile-hidden');
 }
 
 export async function handleChatTools(e) {
@@ -194,6 +183,7 @@ async function handleResetChat(e) {
     chatLoader?.classList.remove('hidden');
 
     await makeRequest({ method: 'patch', url: `${baseUrl}chat/${chatId}` });
+    resetMessageInputContainer();
 
     showAlert('success', 'Chat history cleared successfully');
   } catch (err) {
@@ -204,11 +194,6 @@ async function handleResetChat(e) {
   }
   chatLoader?.classList.add('hidden');
   btnReset.removeAttribute('disabled');
-}
-
-async function handleEditTitle(e) {
-  try {
-  } catch (err) {}
 }
 
 // helpers
@@ -225,4 +210,18 @@ function resetPrevActiveBtn() {
 
   prevActiveBtn?.classList.remove('active-chat-btn');
   prevActiveBtn?.removeAttribute('disabled');
+}
+
+function getSidebar() {
+  return document.querySelector('.chat-btn-container');
+}
+
+export function handleLeftColHide(e) {
+  if (e) if (!e.target.closest('.btn-chat') && !e.target.closest('.close-btn')) return;
+
+  sidebar.classList.add('mobile-hidden');
+}
+
+export function handleSidebarExpandHide() {
+  sidebar.classList.toggle('mobile-hidden');
 }

@@ -2,11 +2,11 @@ import makeRequest from '../reusables/fetch.js';
 import showError from '../reusables/showError.js';
 
 let currentChat;
+const messagesInputContainer = document.querySelector('.chat-container');
 
 class Chat {
   promptInput = document.getElementById('user-input');
   generateBtn = document.querySelector('.btn-ask');
-  messagesInputContainer = document.querySelector('.chat-container');
   // chatTitle = document.querySelector('.chat-title');
   state = { docName: '', chatTitle: '', history: [] };
 
@@ -24,15 +24,7 @@ class Chat {
   }
 
   init() {
-    document.querySelector('.messages-container').remove();
-    this.messagesInputContainer.insertAdjacentHTML(
-      'afterbegin',
-      `<div class='messages-container'>
-        <div class='d-flex justify-content-center chat-loader hidden'>
-          <div class='spinner-grow text-primary loader' role="status"></div> 
-        </div>
-      </div>`
-    );
+    resetMessageInputContainer();
     this.chatContainer = document.querySelector('.messages-container');
     this.generateBtn.addEventListener('click', this.handleGenerateBtn);
     this.promptInput.addEventListener('keyup', this.handleEnterKey);
@@ -122,6 +114,8 @@ class Chat {
   }
 
   replaceTypingEffect(botText, sourceDocuments) {
+    if (currentChat !== this) return;
+
     const lastBotMessage = document.querySelector('.last-bot-message');
     const formatedText = window.markdownit().render(botText);
     lastBotMessage.innerHTML = formatedText;
@@ -169,3 +163,15 @@ class Chat {
 }
 
 export default Chat;
+
+export function resetMessageInputContainer() {
+  document.querySelector('.messages-container').remove();
+  messagesInputContainer.insertAdjacentHTML(
+    'afterbegin',
+    `<div class='messages-container'>
+        <div class='d-flex justify-content-center chat-loader hidden'>
+          <div class='spinner-grow text-primary loader' role="status"></div> 
+        </div>
+      </div>`
+  );
+}
