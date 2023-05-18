@@ -87,6 +87,8 @@ exports.addPdfIntoChat = catchAsync(async function (req, res, next) {
 
   const { vectorName: nameSpace, indexName } = await user.chats.id(chatId);
 
+  console.log(nameSpace, indexName);
+
   await storeToPinecone({
     docs: parsedDoc,
     nameSpace,
@@ -103,7 +105,6 @@ exports.addPdfIntoChat = catchAsync(async function (req, res, next) {
 // --------------------------- Chat
 exports.chat = catchAsync(async function (req, res, next) {
   const { chatId } = req.params;
-  console.log(chatId);
   const { question } = req.body;
 
   if (!question || question.trim() === '')
@@ -113,6 +114,12 @@ exports.chat = catchAsync(async function (req, res, next) {
 
   // OPEN-AI recommendation to replace new lines with space
   const sanitizedQuestion = question.replace('/n', ' ').trim();
+
+  await pineconeClient.init({
+    apiKey: process.env.PINECONE_API_KEY,
+    environment: process.env.PINECONE_ENVIRONMENT,
+  });
+
   const pineconeIndex = pineconeClient.Index(
     indexName || process.env.PINECONE_INDEX_NAME
   );

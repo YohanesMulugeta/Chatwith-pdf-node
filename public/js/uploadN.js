@@ -54,6 +54,7 @@ export async function uploadPdf({ file, endPoint, inputField }) {
 
   fileReader.onload = async function () {
     try {
+      inputField && inputField.setAttribute('disabled', true);
       // progress indicators
       loader.style.display = 'block';
       const { type } = file;

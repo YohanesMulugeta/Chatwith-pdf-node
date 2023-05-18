@@ -61,7 +61,7 @@ async function spiltText(text, check = true) {
 
   const output = await splitter.createDocuments([text]);
 
-  console.log('parsed end');
+  console.log('parsed end///////');
 
   return output;
 }
@@ -87,8 +87,6 @@ exports.storeToPinecone = async function ({ docs, nameSpace, indexName }) {
   }
 
   console.log('success');
-
-  console.log(fileNameOnPine);
 
   return fileNameOnPine;
 };

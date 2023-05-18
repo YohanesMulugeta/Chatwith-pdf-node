@@ -9,6 +9,17 @@ const sidebar = document.querySelector('.upload-chat-btn-container');
 
 const baseUrl = '/api/v1/pdf/';
 
+const chatToolsHtml = `
+      <div class="chat-tools">
+        <buton class="btn-add-document btn btn-tool">
+          <i class="bi bi-journal-plus"></i>
+          <input id="add-file" type="file" hidden="" accept=".pdf,.txt">
+        </buton>
+        <buton class="btn-reset-chat btn btn-tool">
+          <i class="bi bi-arrow-counterclockwise"></i>
+        </buton>
+      </div>`;
+
 async function handleDeleteChat(e) {
   const targetBtn = e.target.closest('.btn-delete-chat');
   const { chatid } = targetBtn.closest('.chat-btn-delete-container').dataset;
@@ -41,39 +52,28 @@ export async function handleChatBtns(e) {
   const deleteChatBtn = e.target.closest('.btn-delete-chat');
   const chatTools = e.target.closest('.chat-tools');
 
-  console.log(chatTools);
   try {
     if (!chatBtn && !deleteChatBtn && !chatTools) return;
     if (deleteChatBtn) return handleDeleteChat(e);
     if (chatTools) return handleChatTools(e);
 
-    const toggleChatTools = (btn) => {
-      btn
-        ?.closest('.chat-btn-delete-container')
-        ?.querySelector('.chat-tools')
-        .classList.toggle('hidden');
-    };
-
     // making previous chatbtn available
-    const prevActiveBtn = document.querySelector('.active-chat-btn');
+    resetPrevActiveBtn();
 
     showProgress(chatBtn);
-
-    prevActiveBtn?.classList.remove('active-chat-btn');
-    prevActiveBtn?.removeAttribute('disabled');
-    toggleChatTools(prevActiveBtn);
 
     // Disabling current active chat btn
     chatBtn.classList.add('active-chat-btn');
 
-    // console.log(chatBtn);
-
     const chatId = getChatId(chatBtn);
     const { data } = await makeRequest({ url: `${baseUrl}chat/${chatId}` });
 
+    chatBtn
+      .closest('.chat-btn-delete-container')
+      .insertAdjacentHTML('beforeend', chatToolsHtml);
+
     const chat = new Chat({ ...data, chatTitle: data.name });
 
-    toggleChatTools(chatBtn);
     // setCurrentChat(chat);
 
     handleSidebarExpandHide();
@@ -107,7 +107,6 @@ function handleUndo(e) {
 async function deleteChat(btn, chatid, intervalId) {
   clearInterval(intervalId);
   showProgress(btn);
-  console.log(chatid);
 
   // DELETE FROM VECTOR DATABASE
   await makeRequest({ method: 'delete', url: `/api/v1/pdf/chat/${chatid}` });
@@ -123,9 +122,7 @@ async function deleteChat(btn, chatid, intervalId) {
 }
 
 export function renderBtn(chat) {
-  const prevActiveBtn = document.querySelector('.active-chat-btn');
-  prevActiveBtn?.classList.remove('active-chat-btn');
-  prevActiveBtn?.removeAttribute('disabled');
+  resetPrevActiveBtn();
 
   getSidebar().insertAdjacentHTML(
     'afterbegin',
@@ -138,18 +135,7 @@ export function renderBtn(chat) {
           <i class="bi bi-archive"></i>
         </button>
       </div>
-      <div class="chat-tools">
-        <buton class="btn-add-document btn btn-tool">
-          <i class="bi bi-journal-plus"></i>
-          <input id="add-file" type="file" hidden="" accept=".pdf,.txt">
-        </buton>
-        <buton class="btn-reset-chat btn btn-tool">
-          <i class="bi bi-arrow-counterclockwise"></i>
-        </buton>
-        <buton class="btn-edit-document-title btn btn-tool">
-          <i class="bi bi-pencil-square"></i>
-        </buton>
-      </div>
+      ${chatToolsHtml}
     </div>`
   );
 }
@@ -166,32 +152,34 @@ export function handleLeftColHide(e) {
 
 export function handleSidebarExpandHide() {
   sidebar.classList.toggle('mobile-hidden');
-  // console.log(expandSideBar.closest('.btn-open-sidebar').firstChild);
 }
 
 export async function handleChatTools(e) {
+  if (e.target.closest('#add-file')) return;
   try {
-    console.log('here to add');
     const addDocumentInput = document.getElementById('add-file');
     if (e.target.closest('.btn-reset-chat')) return handleResetChat(e);
     if (e.target.closest('.btn-edit-document-title')) return handleEditTitle(e);
 
-    if (e.target.closest('.btn-add-document')) addDocumentInput.click();
-
     const inputChangeHandler = function (e) {
       const chatId = getChatId(e.target);
-      console.log('lala');
-      e.target.setAttribute('disabled', true);
+
+      // e.target.setAttribute('disabled', true);
       addDocument(chatId, e.target);
 
-      addDocument.removeEventListener('click', this.handler);
+      addDocumentInput.removeEventListener('change', this.handler);
     };
 
     const bindOpt = {};
-    const handler = inputChangeHandler.bind();
+    const handler = inputChangeHandler.bind(bindOpt);
     bindOpt.handler = handler;
 
     addDocumentInput?.addEventListener('change', handler);
+
+    if (e.target.closest('.btn-add-document')) {
+      addDocumentInput.click();
+      console.log('clicked');
+    }
   } catch (err) {}
 }
 
@@ -231,4 +219,15 @@ async function handleEditTitle(e) {
 // helpers
 function getChatId(el) {
   return el.closest('.chat-btn-delete-container').dataset.chatid;
+}
+
+function resetPrevActiveBtn() {
+  const prevActiveBtn = document.querySelector('.active-chat-btn');
+  prevActiveBtn
+    ?.closest('.chat-btn-delete-container')
+    ?.querySelector('.chat-tools')
+    ?.remove();
+
+  prevActiveBtn?.classList.remove('active-chat-btn');
+  prevActiveBtn?.removeAttribute('disabled');
 }
