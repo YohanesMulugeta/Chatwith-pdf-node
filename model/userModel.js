@@ -244,13 +244,28 @@ userSchema.methods.updateChatModifiedDate = async function (id) {
 userSchema.methods.updateUploadTokens = async function (tokens) {
   this.uploadTokens -= tokens;
 
-  await this.save({ validateBeforeSave: false });
+  const updatedUser = await this.save({ validateBeforeSave: false, new: true });
+
+  return updatedUser;
 };
 
 userSchema.methods.updateConversationTokens = async function (tokens) {
   this.conversationTokens -= tokens;
 
   await this.save({ validateBeforeSave: false });
+};
+
+userSchema.methods.resetUser = async function () {
+  const plan = await Plan.findOne({ name: 'free' });
+
+  this.subscription = plan._id;
+  this.subscriptionUpdatedAt = Date.now();
+  this.conversationTokens = plan.conversationTokenLimit;
+  this.uploadTokens = plan.uloadTokenLimit;
+
+  const updatedUser = await this.save({ validateBeforeSave: false, new: true });
+
+  return updatedUser;
 };
 
 const User = mongoose.model('User', userSchema);

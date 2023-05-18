@@ -8,6 +8,7 @@ import { uploadPdf } from '../uploadN.js';
 const sidebar = document.querySelector('.upload-chat-btn-container');
 
 const baseUrl = '/api/v1/pdf/';
+let handler;
 
 const chatToolsHtml = `
       <div class="chat-tools">
@@ -159,28 +160,22 @@ export async function handleChatTools(e) {
   try {
     const addDocumentInput = document.getElementById('add-file');
     if (e.target.closest('.btn-reset-chat')) return handleResetChat(e);
-    if (e.target.closest('.btn-edit-document-title')) return handleEditTitle(e);
 
-    const inputChangeHandler = function (e) {
-      const chatId = getChatId(e.target);
-
-      // e.target.setAttribute('disabled', true);
-      addDocument(chatId, e.target);
-
-      addDocumentInput.removeEventListener('change', this.handler);
-    };
-
-    const bindOpt = {};
-    const handler = inputChangeHandler.bind(bindOpt);
-    bindOpt.handler = handler;
-
-    addDocumentInput?.addEventListener('change', handler);
+    addDocumentInput?.removeEventListener('change', inputChangeHandler);
+    addDocumentInput?.addEventListener('change', inputChangeHandler);
 
     if (e.target.closest('.btn-add-document')) {
       addDocumentInput.click();
       console.log('clicked');
     }
   } catch (err) {}
+}
+
+function inputChangeHandler(e) {
+  const chatId = getChatId(e.target);
+
+  // e.target.setAttribute('disabled', true);
+  addDocument(chatId, e.target);
 }
 
 async function addDocument(chatId, inputField) {

@@ -50,7 +50,7 @@ exports.loadPdf = async function loadPdf(file, isFile, check = true) {
   //  store in the pinecone
 
   //  return the pinecone name_space for the vectors
-  // return { splitted, tokens };
+  return { splitted, tokens };
   // if (!isFile) return spiltText(file, check);
 };
 

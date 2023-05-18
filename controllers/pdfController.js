@@ -10,6 +10,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const User = require('../model/userModel');
+const Plan = require('../model/planModel');
 
 const { pineconeClient, loadPdf, storeToPinecone } = require('../util/ReadAndFormatPdf');
 const makeChain = require('../util/makeChain');
@@ -37,14 +38,42 @@ const upload = multer({ storage: storage, fileFilter: multerFilter });
 exports.uploadPdf = upload.single('document');
 
 // ------------------------ Check Token LImit
-exports.checkTokenLimit = function (req, res, next) {
+exports.checkTokenLimit = catchAsync(async function (req, res, next) {
   // ---------- TODO: token based controll
-  const { tokens } = req;
-  if (req.user.tokenLimit <= 0)
-    return next(new AppError('You dont have enough token to perform this action.', 400));
+  const { tokens, user } = req;
+  const { question } = req.body;
+
+  if (
+    user.subscriptionUpdatedAt.getTime() / 1000 <=
+    (Date.now() - 30 * 24 * 60 * 60 * 1000) / 1000
+  ) {
+    req.user = await user.resetUser();
+  }
+
+  if (tokens) {
+    if (user.uploadTokens < tokens)
+      return next(
+        new AppError(
+          'You have finished your upload tokens please upgrade your plan.',
+          400
+        )
+      );
+
+    return next();
+  }
+
+  if (user.conversationTokens < question.length / 4)
+    return next(
+      new AppError(
+        'You have finished your conversational tokens, Please upgrade to continue',
+        400
+      )
+    );
 
   next();
-};
+});
+
+// ---------------- parse docs
 
 exports.parseDoc = catchAsync(async function (req, res, next) {
   const file = req.fileName || req.body.text;
@@ -63,7 +92,7 @@ exports.processDocument = catchAsync(async function (req, res, next) {
   const originalName =
     req.originalName?.trim() || req.body.originalName || `document-${Date.now()}`;
 
-  const { parsedDoc } = req;
+  const { parsedDoc, tokens } = req;
 
   const fileNameOnPine = await storeToPinecone({ docs: parsedDoc });
 
@@ -74,7 +103,8 @@ exports.processDocument = catchAsync(async function (req, res, next) {
     vectorName: fileNameOnPine,
     indexName: process.env.PINECONE_INDEX_NAME,
   });
-  const updatedUser = await user.save({ validateBeforeSave: false });
+
+  const updatedUser = await user.updateUploadTokens(tokens);
 
   res.status(200).json({
     status: 'success',
@@ -87,17 +117,17 @@ exports.processDocument = catchAsync(async function (req, res, next) {
 // ------------ Add a document oto analready exsted document
 exports.addPdfIntoChat = catchAsync(async function (req, res, next) {
   const { chatId } = req.params;
-  const { user, parsedDoc } = req;
+  const { user, parsedDoc, tokens } = req;
 
   const { vectorName: nameSpace, indexName } = await user.chats.id(chatId);
-
-  console.log(nameSpace, indexName);
 
   await storeToPinecone({
     docs: parsedDoc,
     nameSpace,
     indexName,
   });
+
+  await user.save({ validateBeforeSave: false });
 
   res.status(200).json({
     status: 'success',
@@ -147,6 +177,10 @@ exports.chat = catchAsync(async function (req, res, next) {
   });
 
   // console.log(response);
+
+  await user.updateConversationTokens(
+    (response.text.length + sanitizedQuestion.length) / 4
+  );
 
   // Update User
   user.chats
