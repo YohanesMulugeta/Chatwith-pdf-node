@@ -503,8 +503,12 @@ For smaller screens
 }
 
 .premium {
-  transform: scale(1.05) translateY(-3%);
-  border: 5px solid var(--purple) !important;
+  /* transform: scale(1.05) translateY(-3%); */
+  /* border: 5px solid var(--purple) !important; */
+}
+
+.premium > .card--header2 {
+  background-color: var(--turi);
 }
 
 .price-advantage {
@@ -676,8 +680,10 @@ For smaller screens
 }
 .card--header2 {
   padding: 40px 25px 40px 25px;
-  background-color: var(--turi);
+
+  background-color: #ff8787;
 }
+
 .badge--smalle {
   font-size: 1rem;
   background-color: #0c53b1;
@@ -861,4 +867,11 @@ input:checked + .slider:before {
 .section-pricing {
   display: flex;
   flex-wrap: wrap;
+}
+.card-pricing {
+  transition: all 0.3s;
+}
+
+.card-pricing:hover {
+  transform: translateY(-10px);
 }
