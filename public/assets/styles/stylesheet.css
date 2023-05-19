@@ -811,7 +811,7 @@ input:checked + .slider:before {
 }
 /*big cards*/
 .big-card {
-  width: 30vmin;
+  width: 25vmin;
   border-radius: 1vmin;
 }
 
@@ -821,35 +821,44 @@ input:checked + .slider:before {
   background-image: url('/assets/img/txt.webp');
   background-color: rgb(255, 255, 255);
 }
-.big-card:nth-child(4) {
+.big-card:nth-child(8) {
   transform: rotate(2deg);
   background-image: url('/assets/img/csv.png');
   background-color: rgb(248, 248, 248);
 }
-.big-card:nth-child(6) {
+.big-card:nth-child(4) {
   transform: translateX(-6%) rotate(-3deg);
   background-image: url('/assets/img/epub.png');
   background-color: rgb(251, 251, 251);
 }
-.big-card:nth-child(8) {
+.big-card:nth-child(9) {
   transform: translate(10%, 3%) rotate(5deg);
-  background-image: url('/assets/img/pdf.jpg');
+  background-image: url('/assets/img/pdf1.png');
+  background-color: rgb(255, 255, 255);
+}
+
+.big-card:nth-child(6) {
+  transform: translate(10%, 3%) rotate(5deg);
+  background-image: url('/assets/img/doc.png');
   background-color: rgb(255, 255, 255);
 }
 
 /*card group-hover*/
 /*NOTE -x-axis to the left -ve sign and for y-axis to the top -ve sign*/
 .card-group:hover > .big-card:nth-child(2) {
-  transform: translate(-150%, 16%) rotate(-24deg);
+  transform: translate(-150%, 26%) rotate(-35deg);
 }
 .card-group:hover > .big-card:nth-child(4) {
-  transform: translate(-80%, 8%) rotate(-8deg);
+  transform: translate(-80%, 8%) rotate(-12deg);
 }
 .card-group:hover > .big-card:nth-child(6) {
-  transform: translate(10%, 8%) rotate(8deg);
+  transform: translate(0);
 }
 .card-group:hover > .big-card:nth-child(8) {
-  transform: translate(80%, 16%) rotate(24deg);
+  transform: translate(80%, 8%) rotate(12deg);
+}
+.card-group:hover > .big-card:nth-child(9) {
+  transform: translate(150%, 26%) rotate(35deg);
 }
 
 /* --------- Reusabels */
