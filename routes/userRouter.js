@@ -9,7 +9,7 @@ router.route('/signup').post(authController.isLogedin, authController.signUp);
 router.route('/login').post(authController.logIn);
 
 // TODO: CHECK
-// router.route('/signUpInWithGoogle').post(authController.signUpInWithGoogle);
+router.route('/signUpInWithGoogle').post(authController.signUpInWithGoogle);
 
 router.route('/forgotpassword').post(authController.forgotPassword);
 router.route('/verifyemail/:token').get(authController.verifyEmail);

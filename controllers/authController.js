@@ -192,10 +192,10 @@ exports.signUpInWithGoogle = catchAsync(async function (req, res, next) {
 
   if (!user) return sinUpUserWithGoogle(email, name, res);
 
-  // if (user.emailVerified === false) {
-  //   user.emailVerified = true;
-  //   await user.save({ validateBeforeSave: false });
-  // }
+  if (user.emailVerified === false) {
+    user.emailVerified = true;
+    await user.save({ validateBeforeSave: false });
+  }
 
   signAndSend(user, 302, res, '/');
 });
