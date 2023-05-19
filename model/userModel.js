@@ -42,9 +42,9 @@ const userSchema = new mongoose.Schema(
       enum: ['user', 'admin', 'dev'],
       default: 'user',
     },
-    // emailVerificationToken: { type: String, select: false },
-    // emailVerificationExpiry: Date,
-    // emailVerified: { type: Boolean },
+    emailVerificationToken: { type: String, select: false },
+    emailVerificationExpiry: Date,
+    emailVerified: { type: Boolean },
     subscription: { type: mongoose.Schema.ObjectId, ref: 'plan' },
     chats: [chatsSchema],
     subscriptionUpdatedAt: Date,
@@ -164,15 +164,15 @@ userSchema.pre(/AndUpdate$/, async function (next) {
   next();
 });
 
-// userSchema.pre(/AndUpdate$/, async function (next) {
-//   if (!this._update.emailVerified) return next();
+userSchema.pre(/AndUpdate$/, async function (next) {
+  if (!this._update.emailVerified) return next();
 
-//   this._update.emailVerified = undefined;
-//   this._update.emailVerificationExpiry = undefined;
-//   this._update.emailVerificationToken = undefined;
+  this._update.emailVerified = undefined;
+  this._update.emailVerificationExpiry = undefined;
+  this._update.emailVerificationToken = undefined;
 
-//   next();
-// });
+  next();
+});
 
 userSchema.pre(/^find/, function (next) {
   this.populate('subscription');

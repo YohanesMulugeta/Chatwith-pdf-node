@@ -83,28 +83,25 @@ exports.signUp = catchAsync(async function (req, res, next) {
     passwordConfirm: passwordConfirm.trim(),
   });
 
-  // const emailVerificationToken = user.createEmailVerificationToken();
+  const emailVerificationToken = user.createEmailVerificationToken();
 
-  // const base =
-  //   process.env.NODE_ENV === 'production'
-  //     ? 'https://zyno-ink.cyclic.app'
-  //     : 'http://localhost:8000';
+  const base = `${req.protocole}://${req.get('host')}`;
 
-  // const url = `${base}/api/v1/users/verifyemail/${emailVerificationToken}`;
+  const url = `${base}/api/v1/users/verifyemail/${emailVerificationToken}`;
 
-  // await user.save({ validateBeforeSave: false });
+  await user.save({ validateBeforeSave: false });
 
-  // try {
-  //   await new Mail(user, url).sendEmailVerification();
-  // } catch (err) {
-  //   await User.findByIdAndDelete(user._id);
-  //   return next(
-  //     new AppError(
-  //       'Sorry something went wrong on creating a user, Please try again.',
-  //       500
-  //     )
-  //   );
-  // }
+  try {
+    await new Mail(user, url).sendEmailVerification();
+  } catch (err) {
+    await User.findByIdAndDelete(user._id);
+    return next(
+      new AppError(
+        'Sorry something went wrong on creating a user, Please try again.',
+        500
+      )
+    );
+  }
 
   // await new Mail(user, `${req.protocol}://${req.hostname}/`).sendWelcome();
   // signAndSend(user, 201, res);
@@ -113,13 +110,13 @@ exports.signUp = catchAsync(async function (req, res, next) {
   //   await User.findOneAndDelete({ _id: user._id, emailVerified: false });
   // }, process.env.EMAIL_VERIFICATION * 60 * 1000);
 
-  signAndSend(user, 200, res, '/');
-  // res.status(201).json({
-  //   status: 'success',
-  //   message:
-  //     'We have sent an email verification link to your email. Please verify your email within 30 minutes.',
-  //   emailVerificationToken,
-  // });
+  // signAndSend(user, 200, res, '/');
+  res.status(201).json({
+    status: 'success',
+    message:
+      'We have sent an email verification link to your email. Please verify your email within 30 minutes.',
+    emailVerificationToken,
+  });
 });
 
 // ------------------------------- VERIFY EMAIL
@@ -154,7 +151,7 @@ exports.verifyEmail = catchAsync(async function (req, res, next) {
 
   await user.save({ validateBeforeSave: false });
 
-  signAndSend(user, 200, res);
+  signAndSend(user, 200, res, '/chat');
   // 5) SEND SUCCESS MESSAGE
   // res.status(200).redirect('/');
 });
@@ -210,8 +207,8 @@ exports.logIn = catchAsync(async function (req, res, next) {
 
   const user = await User.findOne({ email }).select('+password +emailVerified');
 
-  // if (user?.emailVerified === false)
-  //   return next(new AppError('Please verify your email inorder to login', 400));
+  if (user?.emailVerified === false)
+    return next(new AppError('Please verify your email inorder to login', 400));
 
   const isPasswordCorrect = await user?.isCorrect(password);
   if (!isPasswordCorrect) return next(new AppError('Invalid email or password', 400));

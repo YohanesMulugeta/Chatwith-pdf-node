@@ -4,7 +4,7 @@ import { showProgress, removeProgress } from './reusables/showProgressBtn.js';
 
 async function handleSignup(e) {
   const btn = document.getElementById('btn-signup');
-  // const modal = new bootstrap.Modal(document.getElementById('registerlogin'));
+  const modal = new bootstrap.Modal(document.getElementById('registerlogin'));
   try {
     e.preventDefault();
 
@@ -26,14 +26,14 @@ async function handleSignup(e) {
     });
 
     removeProgress(btn, 'Success');
-    // modal.show();
+    modal.show();
 
     showAlert('primary', 'Success. Enjoy our website.');
 
     // REDIRECT
     setTimeout(() => {
-      // modal.hide();
-      location.assign('/chat');
+      modal.hide();
+      location.assign('/login');
     }, 2000);
   } catch (err) {
     showError(err, btn, 'REGISTER NOW!');
