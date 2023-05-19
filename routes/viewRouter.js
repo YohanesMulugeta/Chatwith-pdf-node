@@ -22,7 +22,7 @@ router.route('/terms').get(viewController.terms);
 
 // router.route('/error').get(viewController.error);
 
-// router.route('/profile').get(authController.protect, viewController.profile);
+router.route('/profile').get(authController.protect, viewController.profile);
 
 router.route('/chat').get(viewController.chatpdf);
 router.use(authController.protect, authController.strictTo('dev', 'admin'));
