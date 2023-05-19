@@ -6,7 +6,7 @@ const adminController = require('../controllers/adminController');
 
 const router = express.Router();
 
-// router.get('/resetpassword/:token', viewController.resetPassword);
+router.get('/resetpassword/:token', viewController.resetPassword);
 
 router.use(authController.isLogedin);
 
