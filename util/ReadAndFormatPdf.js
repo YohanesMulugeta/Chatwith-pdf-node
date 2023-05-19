@@ -53,8 +53,7 @@ exports.loadDoc = async function loadPdf(file, fileType, check = true) {
   }
 
   // console.log('Loading ....');
-  const docs = await loader.load();
-  console.log(loader);
+  const docs = text ? text : await loader.load();
 
   if (docs.length === 0)
     throw new AppError(
@@ -62,7 +61,7 @@ exports.loadDoc = async function loadPdf(file, fileType, check = true) {
       400
     );
 
-  text = removeDuplicates(docs[0].pageContent);
+  text = text ? text : removeDuplicates(docs[0].pageContent);
 
   const tokens = text.length / 3.8;
 
