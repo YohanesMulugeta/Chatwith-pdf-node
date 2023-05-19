@@ -85,7 +85,7 @@ exports.signUp = catchAsync(async function (req, res, next) {
 
   const emailVerificationToken = user.createEmailVerificationToken();
 
-  const base = `${req.protocole}://${req.get('host')}`;
+  const base = `${req.protocol}://${req.get('host')}`;
 
   const url = `${base}/api/v1/users/verifyemail/${emailVerificationToken}`;
 
