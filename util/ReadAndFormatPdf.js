@@ -53,6 +53,7 @@ exports.loadDoc = async function loadPdf(file, fileType, check = true) {
   }
 
   // console.log('Loading ....');
+
   const docs = text ? text : await loader.load();
 
   if (docs.length === 0)

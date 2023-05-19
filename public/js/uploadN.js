@@ -45,6 +45,7 @@ async function extractTextFromPdf(file) {
 // ------------ form txt
 async function extractTextFromTxt(file) {
   const text = await file.text();
+  console.log(text);
   return text;
 }
 
@@ -73,7 +74,7 @@ export async function uploadPdf({ file, endPoint, inputField }) {
           break;
 
         case 'text/plain':
-          await extractTextFromTxt(file);
+          text = await extractTextFromTxt(file);
           break;
 
         default:
