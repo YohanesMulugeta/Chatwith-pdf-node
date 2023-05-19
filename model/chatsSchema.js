@@ -21,7 +21,6 @@ chatsSchema.pre(/^find/, function (next) {
 
 module.exports = chatsSchema;
 
-// TODO: MANAGE SUBSCRIPTIONS FOR ALL SCENARIOS
 // TODO: STREAMING
 // TODO: ALLOW USERS TO SET THERI OWN API KEY
 // TODO:

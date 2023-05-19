@@ -828,7 +828,7 @@ input:checked + .slider:before {
 }
 .big-card:nth-child(6) {
   transform: translateX(-6%) rotate(-3deg);
-  background-image: url('/assets/img/ppt.svg');
+  background-image: url('/assets/img/epub.png');
   background-color: rgb(251, 251, 251);
 }
 .big-card:nth-child(8) {
