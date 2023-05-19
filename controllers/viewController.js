@@ -62,6 +62,21 @@ exports.resetPassword = function (req, res, next) {
   res.render('resetPassword', { title: 'Reset Passowrd', token });
 };
 
+exports.dashboard = function (req, res, next) {
+  const formater = new Intl.NumberFormat('fr-FR', {
+    maximumSignificantDigits: 3,
+  });
+
+  const locals = {
+    conversationTokens: formater.format(req.user.conversationTokens),
+    uploadTokens: formater.format(req.user.uploadTokens),
+    subscription: req.user.subscription.name,
+    title: 'Dashboard',
+  };
+
+  res.render('dashboard', locals);
+};
+
 exports.chatpdf = catchAsync(async function (req, res, next) {
   const chats = req.user?.chats.sort((a, b) => b.lastUpdatedAt - a.lastUpdatedAt);
   res.render('chatN', { chats });

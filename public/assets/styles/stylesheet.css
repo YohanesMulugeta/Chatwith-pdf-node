@@ -873,6 +873,19 @@ input:checked + .slider:before {
   transition: all 0.3s;
 }
 
-.card-pricing:hover {
+.card-pricing:hover,
+.dashboard-card:hover {
   transform: translateY(-10px);
+}
+
+.stat-header {
+  border-radius: 7px 7px 0 0;
+  background-color: var(--color-accent);
+  height: 20px;
+  width: 100%;
+  transition: all 0.3s;
+}
+
+.dashboard-card {
+  transition: all 0.3s;
 }

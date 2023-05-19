@@ -25,7 +25,11 @@ router.route('/terms').get(viewController.terms);
 router.route('/profile').get(authController.protect, viewController.profile);
 
 router.route('/chat').get(viewController.chatpdf);
-router.use(authController.protect, authController.strictTo('dev', 'admin'));
+
+router.use(authController.protect);
+router.route('/dashboard').get(viewController.dashboard);
+
+router.use(authController.strictTo('dev', 'admin'));
 router.route('/admin/users').get(adminController.users);
 
 module.exports = router;
