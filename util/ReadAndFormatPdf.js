@@ -1,6 +1,7 @@
 const { PDFLoader } = require('langchain/document_loaders/fs/pdf');
 const { DocxLoader } = require('langchain/document_loaders/fs/docx');
 const { CSVLoader } = require('langchain/document_loaders/fs/csv');
+const { EPubLoader } = require('langchain/document_loaders/fs/epub');
 const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
 const { PineconeStore } = require('langchain/vectorstores/pinecone');
 const { PineconeClient } = require('@pinecone-database/pinecone');
@@ -38,6 +39,12 @@ exports.loadDoc = async function loadPdf(file, fileType, check = true) {
     case 'pdf':
       loader = new PDFLoader(fileDir, {
         splitPages: false,
+      });
+      break;
+
+    case 'epub':
+      loader = new EPubLoader(fileDir, {
+        splitChapters: false,
       });
       break;
 
