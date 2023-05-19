@@ -1,4 +1,6 @@
 const { PDFLoader } = require('langchain/document_loaders/fs/pdf');
+const { DocxLoader } = require('langchain/document_loaders/fs/docx');
+const { CSVLoader } = require('langchain/document_loaders/fs/csv');
 const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
 const { PineconeStore } = require('langchain/vectorstores/pinecone');
 const { PineconeClient } = require('@pinecone-database/pinecone');
@@ -19,28 +21,42 @@ exports.pineconeClient = client;
 })();
 // const pineconeIndex = client.Index(process.env.PINECONE_INDEX);
 
-exports.loadPdf = async function loadPdf(file, isFile, check = true) {
-  let text;
+exports.loadDoc = async function loadPdf(file, fileType, check = true) {
+  let text, loader, opt;
+
+  const fileDir = `${__dirname}/../temp/uploads/${file}`;
   //  split into meaningful chuncks
-  if (isFile) {
-    const loader = new PDFLoader(`${__dirname}/../temp/uploads/${file}`, {
-      splitPages: false,
-    });
+  switch (fileType) {
+    case 'doc':
+      loader = new DocxLoader(fileDir);
+      break;
 
-    // console.log('Loading ....');
-    const docs = await loader.load();
-    if (docs.length === 0)
-      throw new AppError(
-        'Please Provide Readable or Selectable pdf. Please Try Agan!',
-        400
-      );
+    case 'csv':
+      loader = new CSVLoader(fileDir);
+      break;
 
-    text = removeDuplicates(docs[0].pageContent);
-  } else {
-    text = removeDuplicates(file);
+    case 'pdf':
+      loader = new PDFLoader(fileDir, {
+        splitPages: false,
+      });
+      break;
+
+    default:
+      text = removeDuplicates(file);
   }
 
-  // const tokens = encode(text).length;
+  // console.log('Loading ....');
+  const docs = await loader.load();
+  console.log(loader);
+
+  if (docs.length === 0)
+    throw new AppError(
+      'Please Provide Readable or Selectable pdf. Please Try Agan!',
+      400
+    );
+
+  text = removeDuplicates(docs[0].pageContent);
+
   const tokens = text.length / 3.8;
 
   const splitted = await spiltText(text, check);

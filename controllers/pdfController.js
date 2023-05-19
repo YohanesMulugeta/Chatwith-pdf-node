@@ -7,12 +7,13 @@ const { OpenAIEmbeddings } = require('langchain/embeddings/openai');
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
 const openai = new OpenAIApi(configuration);
 
 const User = require('../model/userModel');
 const Plan = require('../model/planModel');
 
-const { pineconeClient, loadPdf, storeToPinecone } = require('../util/ReadAndFormatPdf');
+const { pineconeClient, loadDoc, storeToPinecone } = require('../util/ReadAndFormatPdf');
 const makeChain = require('../util/makeChain');
 const catchAsync = require('../util/catchAsync');
 const multerFilter = require('../util/multerFilter');
@@ -21,10 +22,12 @@ const AppError = require('../util/AppError');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const dest = `${__dirname}/../temp/uploads`;
+
     cb(null, dest);
   },
   filename: function (req, file, cb) {
-    const name = `document-${Date.now()}.pdf`;
+    const name = `document-${Date.now()}.${req.type}`;
+
     req.fileName = name;
     req.originalName = file.originalname || req.originalname;
     // console.log(req.fileName);
@@ -40,7 +43,8 @@ exports.uploadPdf = upload.single('document');
 // ---------------- parse docs
 exports.parseDoc = catchAsync(async function (req, res, next) {
   const file = req.fileName || req.body.text;
-  const { splitted: parsedDoc, tokens } = await loadPdf(file, req.fileName);
+  const { splitted: parsedDoc, tokens } = await loadDoc(file, req.type);
+
   req.parsedDoc = parsedDoc;
   req.tokens = tokens;
 

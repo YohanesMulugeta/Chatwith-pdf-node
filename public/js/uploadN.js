@@ -58,21 +58,40 @@ export async function uploadPdf({ file, endPoint, inputField }) {
       // progress indicators
       loader.style.display = 'block';
       const { type } = file;
-      if (type !== 'application/pdf' && type !== 'text/plain')
-        throw new Error(`This file format ${type} is not supported.`);
+      let text;
+      let document;
 
-      const text =
-        type === 'application/pdf'
-          ? await extractTextFromPdf(file)
-          : await extractTextFromTxt(file);
+      switch (type) {
+        case 'text/csv':
+        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        case 'application/msword':
+          document = handleOtherfiles(file);
+          break;
+
+        case 'application/pdf':
+          text = await extractTextFromPdf(file);
+          break;
+
+        case 'text/plain':
+          await extractTextFromTxt(file);
+          break;
+
+        default:
+          throw new Error(`This file format ${type} is not supported.`);
+      }
+
+      // if (type !== 'application/pdf' && type !== 'text/plain')
+      //   throw new Error();
 
       // return console.log(file.type);
       //   console.log(file);
       //   dataTobeSent.text = text;
-      const dataTobeSent = {
-        text,
-        originalName: file.name,
-      };
+      const dataTobeSent = document
+        ? document
+        : {
+            text,
+            originalName: file.name,
+          };
 
       const data = await makeRequest({
         dataTobeSent,
@@ -111,4 +130,11 @@ export async function uploadPdf({ file, endPoint, inputField }) {
     }
   };
   fileReader.readAsArrayBuffer(file);
+}
+
+function handleOtherfiles(file) {
+  const form = new FormData();
+  form.append('document', file);
+
+  return form;
 }

@@ -1,10 +1,29 @@
 const AppError = require('./AppError');
 
 const multerFilter = (req, file, cb) => {
-  const isPdf = file.mimetype.startsWith('application/pdf');
-  const error = isPdf ? null : new AppError('Not Pdf! Please upload only image.', 400);
+  let error;
+  switch (file.mimetype) {
+    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+      req.type = 'doc';
+      break;
+    case 'application/msword':
+      req.type = 'doc';
+      break;
+    case 'text/csv':
+      req.type = 'csv';
+      break;
+    case 'application/pdf':
+      req.type = 'pdf';
+      break;
+    // case value:
+    //   break;
 
-  cb(error, isPdf);
+    default:
+      error = new AppError('Not Pdf! Please upload only pdfs.', 400);
+      break;
+  }
+
+  cb(error, req.type);
 };
 
 module.exports = multerFilter;
