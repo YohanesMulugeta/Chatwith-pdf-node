@@ -88,6 +88,8 @@ exports.checkNumOfChats = function (req, res, next) {
         400
       )
     );
+
+  next();
 };
 
 // ----------------------- PROCESS pdf
