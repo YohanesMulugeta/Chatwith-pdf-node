@@ -37,9 +37,18 @@ const upload = multer({ storage: storage, fileFilter: multerFilter });
 // --------------------- UPLOAD PDF
 exports.uploadPdf = upload.single('document');
 
+// ---------------- parse docs
+exports.parseDoc = catchAsync(async function (req, res, next) {
+  const file = req.fileName || req.body.text;
+  const { splitted: parsedDoc, tokens } = await loadPdf(file, req.fileName);
+  req.parsedDoc = parsedDoc;
+  req.tokens = tokens;
+
+  next();
+});
+
 // ------------------------ Check Token LImit
 exports.checkTokenLimit = catchAsync(async function (req, res, next) {
-  // ---------- TODO: token based controll
   const { tokens, user } = req;
   const { question } = req.body;
 
@@ -53,10 +62,7 @@ exports.checkTokenLimit = catchAsync(async function (req, res, next) {
   if (tokens) {
     if (user.uploadTokens < tokens)
       return next(
-        new AppError(
-          'You have finished your upload tokens please upgrade your plan.',
-          400
-        )
+        new AppError('You have finished tokens for upload please upgrade your plan.', 400)
       );
 
     return next();
@@ -73,19 +79,16 @@ exports.checkTokenLimit = catchAsync(async function (req, res, next) {
   next();
 });
 
-// ---------------- parse docs
-
-exports.parseDoc = catchAsync(async function (req, res, next) {
-  const file = req.fileName || req.body.text;
-  const { splitted: parsedDoc, tokens } = await loadPdf(file, req.fileName);
-  req.parsedDoc = parsedDoc;
-  req.tokens = tokens;
-
-  next();
-});
-
 // Check num of chats middle ware
-exports.checkNumOfChats = catchAsync(async function (req, res, next) {});
+exports.checkNumOfChats = function (req, res, next) {
+  if (req.user.chats.length >= req.user.subscription.maxChats)
+    return next(
+      new AppError(
+        'You have reached your max chat windown. Please delete atleast one chat to proceed.',
+        400
+      )
+    );
+};
 
 // ----------------------- PROCESS pdf
 exports.processDocument = catchAsync(async function (req, res, next) {
@@ -93,17 +96,6 @@ exports.processDocument = catchAsync(async function (req, res, next) {
     req.originalName?.trim() || req.body.originalName || `document-${Date.now()}`;
 
   const { parsedDoc, tokens } = req;
-
-  if (
-    req.originalUrl.endsWith('/processpdf') &&
-    req.user.chats.length >= req.user.subscription.maxChats
-  )
-    return next(
-      new AppError(
-        'You have reached your max chat windown. Please delete one chat to proceed.',
-        400
-      )
-    );
 
   const fileNameOnPine = await storeToPinecone({ docs: parsedDoc });
 

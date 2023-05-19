@@ -63,6 +63,6 @@ exports.resetPassword = function (req, res, next) {
 };
 
 exports.chatpdf = catchAsync(async function (req, res, next) {
-  const chats = req.user.chats.sort((a, b) => b.lastUpdatedAt - a.lastUpdatedAt);
+  const chats = req.user?.chats.sort((a, b) => b.lastUpdatedAt - a.lastUpdatedAt);
   res.render('chatN', { chats });
 });

@@ -10,6 +10,7 @@ router.use(authController.protect);
 router
   .route('/processpdf')
   .post(
+    pdfController.checkNumOfChats,
     pdfController.uploadPdf,
     pdfController.parseDoc,
     pdfController.checkTokenLimit,

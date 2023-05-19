@@ -259,9 +259,9 @@ userSchema.methods.resetUser = async function () {
   const plan = await Plan.findOne({ name: 'free' });
 
   this.subscription = plan._id;
-  this.subscriptionUpdatedAt = Date.now();
-  this.conversationTokens = plan.conversationTokenLimit;
-  this.uploadTokens = plan.uloadTokenLimit;
+  // this.subscriptionUpdatedAt = Date.now();
+  // this.conversationTokens = plan.conversationTokenLimit;
+  // this.uploadTokens = plan.uloadTokenLimit;
 
   const updatedUser = await this.save({ validateBeforeSave: false, new: true });
 

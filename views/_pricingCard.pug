@@ -33,9 +33,9 @@ mixin pricingCard(plan)
                         | Get Started
 
                 -else if(user.subscription.name === plan.name)
-                    buton.btn-outline-primary.btn.my-2.my-lg-3.mx-2.px-4.btn-login(disabled)
+                    a.btn-getStarted.btn-outline-primary.btn.my-2.my-lg-3.mx-2.px-4.btn-login(data-bs-toggle="modal", data-bs-target="#modal-pay")
                         i.bi.bi-currency-euro
-                        | Current Subscription
+                        | Continue
                 -else if(+user.subscription.price < +plan.price)
                     a.btn-getStarted.btn-outline-primary.btn.my-2.my-lg-3.mx-2.px-4.btn-login(data-bs-toggle="modal", data-bs-target="#modal-pay")
                         i.bi.bi-currency-euro
