@@ -28,7 +28,7 @@ class Chat {
     this.chatContainer = document.querySelector('.messages-container');
     this.generateBtn.addEventListener('click', this.handleGenerateBtn);
     this.promptInput.addEventListener('keyup', this.handleEnterKey);
-
+    this.chatContainer.addEventListener('click', this.handleCopy);
     this.populateHistory();
   }
 
@@ -99,7 +99,10 @@ class Chat {
       ? `<div class='d-flex justify-content-start loader-chat-bot'>
               <div class='spinner-grow text-primary loader' role='status'></div>
           </div>`
-      : window.markdownit().render(resultText);
+      : `<div class='text-to-be-copy'>${window.markdownit().render(resultText)}</div>` +
+        ` <button class="btn-copy btn btn-primary">
+          <i class="bi bi-clipboard2"></i>Copy
+        </button>`;
 
     document.querySelector('.last-bot-message')?.classList.remove('last-bot-message');
     const botDiv = document.createElement('div');
@@ -130,11 +133,6 @@ class Chat {
     // lastBotMessage.scrollIntoView();
   }
 
-  collectGarbage() {
-    this.generateBtn.removeEventListener('click', this.handleGenerateBtn);
-    this.promptInput.removeEventListener('keyup', this.handleEnterKey);
-  }
-
   renderSourceAccordion(source, botMessage, i) {
     const containerId = `c-${Date.now()}`;
     const headingId = `h-${Date.now()}`;
@@ -156,9 +154,30 @@ class Chat {
     );
   }
 
+  handleCopy(e) {
+    const copyBtn = e.target.closest('.btn-copy');
+    if (!copyBtn) return;
+
+    const text = copyBtn
+      .closest('.bot-message')
+      .querySelector('.text-to-be-copy').innerText;
+
+    console.log(text);
+
+    navigator.clipboard.writeText(text);
+
+    copyBtn.innerHTML = '<i class="bi bi-clipboard2-check-fill"></i>Copied!';
+  }
+
   setCurrentChat(chat) {
     currentChat?.collectGarbage();
     currentChat = chat;
+  }
+
+  collectGarbage() {
+    this.generateBtn.removeEventListener('click', this.handleGenerateBtn);
+    this.promptInput.removeEventListener('keyup', this.handleEnterKey);
+    this.chatContainer.removeEventListener('click', this.handleCopy);
   }
 }
 
@@ -175,3 +194,7 @@ export function resetMessageInputContainer() {
       </div>`
   );
 }
+
+// copy btn
+
+/*; */
