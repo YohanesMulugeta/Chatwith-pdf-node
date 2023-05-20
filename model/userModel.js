@@ -48,8 +48,8 @@ const userSchema = new mongoose.Schema(
     subscription: { type: mongoose.Schema.ObjectId, ref: 'plan' },
     chats: [chatsSchema],
     subscriptionUpdatedAt: Date,
-    conversationTokens: Number,
-    uploadTokens: Number,
+    conversationTokens: { type: Number, default: 0 },
+    uploadTokens: { type: Number, default: 0 },
     signedUpWithGoogle: Boolean,
     createdAt: Date,
   },
@@ -135,7 +135,9 @@ userSchema.pre('save', async function (next) {
     name: this.role === 'user' ? 'free' : 'gold',
   };
 
-  const plan = await Plan.findOne(filterObj);
+  const plan = await Plan.findOne({ ...filterObj, enabled: true });
+
+  if (!plan) next();
 
   this.subscription = plan._id;
   this.subscriptionUpdatedAt = Date.now();

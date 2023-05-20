@@ -56,6 +56,9 @@ exports.checkTokenLimit = catchAsync(async function (req, res, next) {
   const { tokens, user } = req;
   const { question } = req.body;
 
+  if (!req.user.subscription)
+    return next(new AppError('Please Subscribe to one of our plans to get going.', 400));
+
   if (
     user.subscriptionUpdatedAt.getTime() / 1000 <=
     (Date.now() - 30 * 24 * 60 * 60 * 1000) / 1000
@@ -85,6 +88,9 @@ exports.checkTokenLimit = catchAsync(async function (req, res, next) {
 
 // Check num of chats middle ware
 exports.checkNumOfChats = function (req, res, next) {
+  if (!req.user.subscription)
+    return next(new AppError('Please Subscribe to one of our plans to get going.', 400));
+
   if (req.user.chats.length >= req.user.subscription.maxChats)
     return next(
       new AppError(

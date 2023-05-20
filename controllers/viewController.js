@@ -3,7 +3,7 @@ const AppError = require('../util/AppError');
 const catchAsync = require('../util/catchAsync');
 
 exports.home = catchAsync(async function (req, res, next) {
-  const plans = await Plan.find();
+  const plans = await Plan.find({ enabled: true });
 
   res.render('home', { title: 'Home', plans });
 });
@@ -13,7 +13,7 @@ exports.about = function (req, res, next) {
 };
 
 exports.pricing = catchAsync(async function (req, res, next) {
-  const plans = await Plan.find();
+  const plans = await Plan.find({ enabled: true });
 
   res.render('pricing', { title: 'Pricing', plans });
 });

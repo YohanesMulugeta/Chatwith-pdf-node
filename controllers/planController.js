@@ -9,6 +9,10 @@ const AppError = require('../util/AppError');
 // get All Plans
 exports.getPlans = handleFactory.getAll(Plan);
 
+// update Plan
+exports.updatePlan = catchAsync(handleFactory.getByIdAndUpdate(Plan));
+
+// Checkout
 exports.getCheckoutSession = catchAsync(async function (req, res, next) {
   //   Get Plan
   const { planId } = req.params;

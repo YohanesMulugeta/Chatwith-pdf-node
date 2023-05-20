@@ -22,14 +22,28 @@ const planSchema = new mongoose.Schema({
     min: 1,
     required: [true, 'A plan must have maxChats'],
   },
+  enabled: { type: Boolean, default: true, select: false },
   description: {
     type: String,
     // required: [true, 'Plan must have description']
   },
 });
 
+// planSchema.pre(/AndUpdate$/, function (next) {
+//   if(this._update.enabled)
+// });
+
 planSchema.pre(/^find/, function (next) {
   this.sort('-price');
+
+  next();
+});
+
+planSchema.pre(/Update$/, function (next) {
+  if (!this._update.name) return next();
+
+  const update = this._update;
+  delete update.name;
 
   next();
 });

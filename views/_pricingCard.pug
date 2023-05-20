@@ -27,8 +27,13 @@ mixin pricingCard(plan)
                     span.price-advantage= ` ${plan.maxChats} ` 
                     | Chat/Conversation windows. you can just delete one whenever you want to add another window.
             .nav-item.text-center.action-buttons.pricing-buttons
-                -if(!user)
+                -if(!user )
                     a.btn-outline-primary.btn.my-2.my-lg-3.mx-2.px-4.btn-login(href="/login" )
+                        i.bi.bi-currency-euro
+                        | Get Started
+
+                -else if(!user.subscription)
+                    a.btn-getStarted.btn-outline-primary.btn.my-2.my-lg-3.mx-2.px-4.btn-login(data-bs-toggle="modal", data-bs-target="#modal-pay")
                         i.bi.bi-currency-euro
                         | Get Started
 

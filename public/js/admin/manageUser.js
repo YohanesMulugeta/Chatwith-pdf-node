@@ -23,7 +23,7 @@ const nameIn = modalEditUser?.querySelector('#name');
 const roleIn = modalEditUser?.querySelector('#role');
 
 // ------------------------------ EDIT USER
-async function handleSaveChanges(e) {
+export async function handleSaveChanges(e) {
   try {
     e.preventDefault();
     if (!e.target.closest('.btn-update-input')) return;
@@ -39,36 +39,11 @@ async function handleSaveChanges(e) {
           : true
         : inputField.value;
 
-    // const email = emailIn.value.trim() ? emailIn.value.trim() : this.email;
-    // const name = nameIn.value.trim() ? nameIn.value.trim() : this.name;
-    // const password = passwordIn.value.trim() ? passwordIn.value.trim() : undefined;
-    // const role = roleIn.value.trim() ? roleIn.value.trim().toLowerCase() : this.role;
-    // const plan = planIn.value.trim() ? planIn.value.trim() : this.paln;
-    // const conversationTokens = conversationalTokenIn.value.trim()
-    //   ? conversationalTokenIn.value.trim()
-    //   : this.conversationTokens;
-    // const uploadTokens = uploadTokenIn.value.trim()
-    //   ? uploadTokenIn.value.trim()
-    //   : this.uploadTokens;
-
-    // show progress btn
     showProgress(e.target, ' ');
 
-    const updated = await axios.patch(`/api/v1/users/${this._id}`, {
+    const updated = await axios.patch(this.endpoint, {
       [inputFieldId]: inputFieldValue,
     });
-
-    // const updated = await axios.patch(`/api/v1/users/${this._id}`, {
-    //   email,
-    //   plan,
-    //   name,
-    //   password,
-    //   role,
-    //   conversationTokens,
-    //   uploadTokens,
-    // });
-
-    // formEditUser.removeEventListener('click', this.handler);
 
     // show success alert and remobe the progress button
     showAlert('success', 'Update Successful');
@@ -114,7 +89,7 @@ export function handleUserDeleteAndEdit(e) {
 
   // use garbage collector
   garbageCollector(modalEditUser, {
-    bindOpt: { ...user },
+    bindOpt: { ...user, endpoint: `/api/v1/users/${user._id}` },
     target: formEditUser,
     handler: handleSaveChanges,
     event: 'click',
