@@ -176,12 +176,12 @@ userSchema.pre(/AndUpdate$/, async function (next) {
   next();
 });
 
-userSchema.pre(/^find/, function (next) {
-  this.populate('subscription');
-  // this.populate('chat');
+// userSchema.pre(/^find/, function (next) {
+//   this.populate('subscription');
+//   // this.populate('chat');
 
-  next();
-});
+//   next();
+// });
 
 userSchema.pre(/AndUpdate$/, async function (next) {
   if (!this._update?.plan) return next();
