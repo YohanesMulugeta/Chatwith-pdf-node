@@ -69,7 +69,6 @@ exports.handleWebhook = function (req, res, next) {
 };
 
 async function updateUserPlan(session) {
-  console.log(session.client_reference_id, 'pussy');
   const planId = session.client_reference_id;
   const user = await User.findOne({ email: session.customer_email });
 
