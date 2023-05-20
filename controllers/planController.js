@@ -70,10 +70,11 @@ exports.handleWebhook = function (req, res, next) {
 
 async function updateUserPlan(session) {
   const planId = session.client_reference_id;
-  console.log(session.customer_email);
-  const user = await User.findOne({ email: session.customer_email });
 
+  const user = await User.findOne({ email: session.customer_email });
   user.subscription = planId;
+
+  console.log(user.subscription);
 
   await user.save({ validateBeforeSave: false });
 }
