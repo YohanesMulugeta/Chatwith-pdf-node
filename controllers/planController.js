@@ -73,6 +73,7 @@ async function updateUserPlan(session) {
   const user = await User.findOne({ email: session.customer_email });
 
   user.subscription = planId;
+
   await user.save({ validateBeforeSave: false });
 }
 
