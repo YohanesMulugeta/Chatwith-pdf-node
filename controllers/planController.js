@@ -49,6 +49,7 @@ exports.getCheckoutSession = catchAsync(async function (req, res, next) {
 });
 
 exports.handleWebhook = function (req, res, next) {
+  console.log('pussy');
   const signature = req.headers['stripe-signature'];
 
   let event;
@@ -63,9 +64,7 @@ exports.handleWebhook = function (req, res, next) {
     res.status(400).send(`Webhook Error: ${err.message}`);
     return;
   }
-
-  console.log(event.type);
-
+  console.log('pussy');
   if (event.type === 'checkout.session.completed') updateUserPlan(event.data.object, res);
   res.send();
 };
@@ -73,10 +72,6 @@ exports.handleWebhook = function (req, res, next) {
 async function updateUserPlan(session) {
   const planId = session.client_reference_id;
   const user = await User.findOne({ email: session.customer_email });
-
-  user.subscription = planId;
-
-  console.log(user.subscription, planId);
 
   await user.save({ validateBeforeSave: false });
 }
