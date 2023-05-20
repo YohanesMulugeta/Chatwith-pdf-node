@@ -19,6 +19,9 @@ const chatToolsHtml = `
         <buton class="btn-reset-chat btn btn-tool">
           <i class="bi bi-arrow-counterclockwise"></i>
         </buton>
+        <buton class="btn-download-chat btn btn-tool">
+          <i class="bi bi-download"></i>
+        </buton>
       </div>`;
 
 async function handleDeleteChat(e) {
@@ -145,6 +148,8 @@ export async function handleChatTools(e) {
   try {
     const addDocumentInput = document.getElementById('add-file');
     if (e.target.closest('.btn-reset-chat')) return handleResetChat(e);
+    if (e.target.closest('.btn-download-chat'))
+      return currentChat.handleDownloadConversation();
 
     addDocumentInput.value = '';
     addDocumentInput?.removeEventListener('change', inputChangeHandler);

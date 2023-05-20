@@ -140,6 +140,10 @@ body {
   content: 'Clear History';
 }
 
+.btn-download-chat:is(:hover)::after {
+  content: 'Download';
+}
+
 .btn-copy {
   position: relative;
 }

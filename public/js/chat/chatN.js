@@ -23,6 +23,7 @@ class Chat {
     this.init();
   }
 
+  // initialize
   init() {
     resetMessageInputContainer();
     this.chatContainer = document.querySelector('.messages-container');
@@ -32,6 +33,7 @@ class Chat {
     this.populateHistory();
   }
 
+  // --------------- populate history to chat container
   populateHistory() {
     if (this.state.history.length === 0) {
       this.addBotMessage(
@@ -45,6 +47,7 @@ class Chat {
     }
   }
 
+  // ------------- passer to the send qustion function from the input
   handleGenerateBtn = (e) => {
     e.preventDefault();
     const value = this.promptInput.value;
@@ -59,7 +62,7 @@ class Chat {
     }
   };
 
-  // sendQuestion
+  // ---------------------- SENDS QUESTION TO THE BACK END
   async sendQuestion(question) {
     try {
       this.addUserMessage(question);
@@ -84,6 +87,7 @@ class Chat {
     }
   }
 
+  // ---------------- RENDERS USER QUESTION
   addUserMessage(message) {
     const userDiv = document.createElement('div');
     userDiv.className = 'user-message message';
@@ -93,7 +97,7 @@ class Chat {
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
   }
 
-  //create new html instance for BOT message
+  //--------------- create new html instance for BOT message
   addBotMessage(resultText, load = false) {
     const formatedText = load
       ? `<div class='d-flex justify-content-start loader-chat-bot'>
@@ -116,6 +120,7 @@ class Chat {
     // botDiv.scrollIntoView();
   }
 
+  // --------------------- THSI WILL REPLACE THE LOADING BOT WITH THE ACTULA MESSAGE
   replaceTypingEffect(botText, sourceDocuments) {
     if (currentChat !== this) return;
 
@@ -133,6 +138,7 @@ class Chat {
     // lastBotMessage.scrollIntoView();
   }
 
+  // -------------------- SOURCE RENDERER
   renderSourceAccordion(source, botMessage, i) {
     const containerId = `c-${Date.now()}`;
     const headingId = `h-${Date.now()}`;
@@ -154,26 +160,55 @@ class Chat {
     );
   }
 
-  handleCopy(e) {
+  // -------------------- COPY BTN HANDLER
+  handleCopy = (e) => {
     const copyBtn = e.target.closest('.btn-copy');
     if (!copyBtn) return;
 
-    const text = copyBtn
-      .closest('.bot-message')
-      .querySelector('.text-to-be-copy').innerText;
+    const text = this.getBotMess(copyBtn);
 
     console.log(text);
 
     navigator.clipboard.writeText(text);
 
     copyBtn.innerHTML = '<i class="bi bi-clipboard2-check-fill"></i>';
+  };
+
+  // ----------------- CONVERSATION DOWNLOADER
+  handleDownloadConversation() {
+    const conversations = document.querySelectorAll('.message');
+
+    let formatedConversation = '';
+
+    conversations.forEach((mess) => {
+      formatedConversation += mess.classList.contains('bot-message')
+        ? `BOT: ${this.getBotMess(mess)} \n \n`
+        : `USER: ${mess.innerText} \n`;
+    });
+
+    const downloadHiddenEl = document.createElement('a');
+    downloadHiddenEl.setAttribute(
+      'href',
+      'data:text/plain;charset=urf-8,' + encodeURIComponent(formatedConversation)
+    );
+    downloadHiddenEl.setAttribute('download', this.state.chatId + '.txt');
+    downloadHiddenEl.style.display = 'none';
+    downloadHiddenEl.click();
+    downloadHiddenEl.remove();
   }
 
+  // ---------- CURRENT CHAT SETTER
   setCurrentChat(chat) {
     currentChat?.collectGarbage();
     currentChat = chat;
   }
 
+  // ---------- HELPER TO GET BOT MESSAGE
+  getBotMess(el) {
+    return el.closest('.bot-message').querySelector('.text-to-be-copy').innerText;
+  }
+
+  // ------------ GARBAGE COLLECTOR
   collectGarbage() {
     this.generateBtn.removeEventListener('click', this.handleGenerateBtn);
     this.promptInput.removeEventListener('keyup', this.handleEnterKey);
