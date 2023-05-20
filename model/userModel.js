@@ -120,7 +120,7 @@ userSchema.pre('save', async function (next) {
   console.log('pussy');
   const plan = await Plan.findById(this.subscription);
 
-  this.subscription = plan._id;
+  // this.subscription = plan._id;
   this.subscriptionUpdatedAt = Date.now();
   this.conversationTokens = plan.conversationTokenLimit;
   this.uploadTokens = plan.uloadTokenLimit;
