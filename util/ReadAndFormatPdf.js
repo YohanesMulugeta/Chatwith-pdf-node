@@ -94,9 +94,8 @@ async function spiltText(text, check = true) {
   return output;
 }
 
-// ERRORS EMPITY DOCUMENT THAT IS DOCS = []
-
-exports.storeToPinecone = async function ({ docs, nameSpace, indexName }) {
+// --------------- STORE DOCUMENT TO PINECONE
+exports.storeToPinecone = async function ({ docs, nameSpace, indexName, openAIApiKey }) {
   const pineconeIndex = client.Index(indexName || process.env.PINECONE_INDEX_NAME);
 
   const fileNameOnPine = nameSpace || `pine-${Date.now()}`;
@@ -106,7 +105,7 @@ exports.storeToPinecone = async function ({ docs, nameSpace, indexName }) {
   for (let i = 0; i < docs.length; i += maxVector) {
     await PineconeStore.fromDocuments(
       docs.slice(i, i + maxVector + 1),
-      new OpenAIEmbeddings(),
+      new OpenAIEmbeddings({ openAIApiKey: openAIApiKey }),
       {
         pineconeIndex,
         namespace: fileNameOnPine,

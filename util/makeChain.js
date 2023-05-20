@@ -28,10 +28,12 @@ If the question is not related to the document or based on the document, politel
 Question: {question}
 Helpful answer in markdown:`;
 
-module.exports = (vectorstore) => {
+module.exports = (vectorstore, callbacks) => {
   const model = new OpenAI({
     temperature: 0.3, // increase temepreature to get more creative answers
     modelName: 'gpt-3.5-turbo', //change this to gpt-4 if you have access
+    streaming: true,
+    callbacks: [callbacks],
   });
 
   const chain = ConversationalRetrievalQAChain.fromLLM(model, vectorstore.asRetriever(), {

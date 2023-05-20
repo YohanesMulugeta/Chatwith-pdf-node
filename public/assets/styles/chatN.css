@@ -130,6 +130,7 @@ body {
   position: absolute;
   bottom: 110%;
   font-size: 12px;
+  width: 200px;
 }
 
 .btn-add-document:is(:hover)::after {
@@ -205,7 +206,7 @@ body {
   width: 80%;
 
   position: absolute;
-  bottom: 0;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   padding-top: 10px;

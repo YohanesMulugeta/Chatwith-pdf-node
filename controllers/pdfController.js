@@ -7,6 +7,7 @@ const { OpenAIEmbeddings } = require('langchain/embeddings/openai');
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
+const { BaseCallbackHandler } = require('langchain/callbacks');
 
 const openai = new OpenAIApi(configuration);
 
@@ -86,7 +87,7 @@ exports.checkTokenLimit = catchAsync(async function (req, res, next) {
   next();
 });
 
-// Check num of chats middle ware
+// ------------------- CHECK NUM OF CHATS A USER HAVE
 exports.checkNumOfChats = function (req, res, next) {
   if (!req.user.subscription)
     return next(new AppError('Please Subscribe to one of our plans to get going.', 400));
@@ -108,8 +109,12 @@ exports.processDocument = catchAsync(async function (req, res, next) {
     req.originalName?.trim() || req.body.originalName || `document-${Date.now()}`;
 
   const { parsedDoc, tokens } = req;
+  const openAIApiKey = req.cookies.openAIApiKey;
 
-  const fileNameOnPine = await storeToPinecone({ docs: parsedDoc });
+  const fileNameOnPine = await storeToPinecone({
+    docs: parsedDoc,
+    openAIApiKey: openAIApiKey,
+  });
 
   // store the new chat
   const user = await User.findById(req.user._id).select('+chats.chatHistory');
@@ -135,11 +140,13 @@ exports.addPdfIntoChat = catchAsync(async function (req, res, next) {
   const { user, parsedDoc, tokens } = req;
 
   const { vectorName: nameSpace, indexName } = await user.chats.id(chatId);
+  const openAIApiKey = req.cookies.openAIApiKey;
 
   await storeToPinecone({
     docs: parsedDoc,
     nameSpace,
     indexName,
+    openAIApiKey: openAIApiKey,
   });
 
   await user.save({ validateBeforeSave: false });
@@ -155,6 +162,7 @@ exports.addPdfIntoChat = catchAsync(async function (req, res, next) {
 exports.chat = catchAsync(async function (req, res, next) {
   const { chatId } = req.params;
   const { question } = req.body;
+  const openAIApiKey = res.cookies?.openAIApiKey;
 
   if (!question || question.trim() === '')
     return next(new AppError('You have to provide question!', 400));
@@ -174,17 +182,26 @@ exports.chat = catchAsync(async function (req, res, next) {
   );
 
   // vectore store
-  const vectorStore = await PineconeStore.fromExistingIndex(new OpenAIEmbeddings(), {
-    pineconeIndex,
-    namespace: nameSpace,
-  });
+  const vectorStore = await PineconeStore.fromExistingIndex(
+    new OpenAIEmbeddings({ openAIApiKey: openAIApiKey }),
+    {
+      pineconeIndex,
+      namespace: nameSpace,
+    }
+  );
 
   // Get chat history
   const user = await User.findById(req.user._id).select('+chats.chatHistory');
   const chatHistory = user.chats.id(chatId).chatHistory.slice(-5);
 
-  const chain = makeChain(vectorStore);
+  // let newToken
+  const streamHandler = {
+    handleLLMNewToken(token) {
+      console.log('token', { token });
+    },
+  };
 
+  const chain = makeChain(vectorStore, streamHandler);
   //Ask a question using chat history
   const response = await chain.call({
     question: sanitizedQuestion,
