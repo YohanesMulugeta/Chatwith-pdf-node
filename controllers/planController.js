@@ -50,7 +50,7 @@ exports.getCheckoutSession = catchAsync(async function (req, res, next) {
 
 exports.handleWebhook = function (req, res, next) {
   const signature = req.headers['stripe-signature'];
-
+  console.log('dersual');
   let event;
 
   try {
@@ -59,6 +59,8 @@ exports.handleWebhook = function (req, res, next) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET
     );
+
+    console.log(event?.type);
   } catch (err) {
     res.status(400).send(`Webhook Error: ${err.message}`);
     return;
