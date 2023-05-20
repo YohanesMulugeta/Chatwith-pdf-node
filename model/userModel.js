@@ -115,8 +115,9 @@ userSchema.pre('save', function (next) {
 
 // new subscriptions
 userSchema.pre('save', async function (next) {
+  console.log('what is this');
   if (!this.isModified('subscription')) return next();
-
+  console.log('pussy');
   const plan = await Plan.findById(this.subscription);
 
   this.subscription = plan._id;
