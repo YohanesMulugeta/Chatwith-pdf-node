@@ -74,6 +74,8 @@ async function updateUserPlan(session) {
 
   user.subscription = planId;
 
+  console.log(user.subscription, planId);
+
   await user.save({ validateBeforeSave: false });
 }
 
