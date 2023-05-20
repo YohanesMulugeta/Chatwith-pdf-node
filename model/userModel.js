@@ -135,9 +135,9 @@ userSchema.pre('save', async function (next) {
     name: this.role === 'user' ? 'free' : 'gold',
   };
 
-  const plan = await Plan.findOne({ ...filterObj, enabled: true });
+  const plan = await Plan.findOne({ ...filterObj });
 
-  if (!plan) next();
+  // if (!plan) next();
 
   this.subscription = plan._id;
   this.subscriptionUpdatedAt = Date.now();
@@ -176,12 +176,12 @@ userSchema.pre(/AndUpdate$/, async function (next) {
   next();
 });
 
-// userSchema.pre(/^find/, function (next) {
-//   this.populate('subscription');
-//   // this.populate('chat');
+userSchema.pre(/^find/, function (next) {
+  this.populate('subscription');
+  // this.populate('chat');
 
-//   next();
-// });
+  next();
+});
 
 userSchema.pre(/AndUpdate$/, async function (next) {
   if (!this._update?.plan) return next();
