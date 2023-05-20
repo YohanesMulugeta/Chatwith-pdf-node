@@ -64,6 +64,8 @@ exports.handleWebhook = function (req, res, next) {
     return;
   }
 
+  console.log(event.type);
+
   if (event.type === 'checkout.session.completed') updateUserPlan(event.data.object, res);
   res.send();
 };
