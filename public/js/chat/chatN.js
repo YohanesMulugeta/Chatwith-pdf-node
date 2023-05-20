@@ -100,8 +100,8 @@ class Chat {
               <div class='spinner-grow text-primary loader' role='status'></div>
           </div>`
       : `<div class='text-to-be-copy'>${window.markdownit().render(resultText)}</div>` +
-        ` <button class="btn-copy btn btn-primary">
-          <i class="bi bi-clipboard2"></i>Copy
+        ` <button class="btn-copy btn btn-outline-primary">
+          <i class="bi bi-clipboard2"></i>
         </button>`;
 
     document.querySelector('.last-bot-message')?.classList.remove('last-bot-message');
@@ -166,7 +166,7 @@ class Chat {
 
     navigator.clipboard.writeText(text);
 
-    copyBtn.innerHTML = '<i class="bi bi-clipboard2-check-fill"></i>Copied!';
+    copyBtn.innerHTML = '<i class="bi bi-clipboard2-check-fill"></i>';
   }
 
   setCurrentChat(chat) {
