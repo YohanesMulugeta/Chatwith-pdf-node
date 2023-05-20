@@ -63,13 +63,11 @@ exports.resetPassword = function (req, res, next) {
 };
 
 exports.dashboard = function (req, res, next) {
-  const formater = new Intl.NumberFormat('fr-FR', {
-    maximumSignificantDigits: 3,
-  });
+  const formater = new Intl.NumberFormat('fr-FR');
 
   const locals = {
-    conversationTokens: formater.format(req.user.conversationTokens),
-    uploadTokens: formater.format(req.user.uploadTokens),
+    conversationTokens: formater.format(req.user.conversationTokens.toFixed(0)),
+    uploadTokens: formater.format(req.user.uploadTokens.toFixed(0)),
     subscription: req.user.subscription.name,
     title: 'Dashboard',
   };

@@ -32,8 +32,10 @@ html(lang="en")
                     ul.navbar-nav.ms-auto.rounded
                         //- li.nav-item
                         //-     a.nav-link.px-3.py-2.mx-2.my-2.my-lg-3(aria-current="page", href="/") Home
-                        li.nav-item
-                            a.nav-link.px-3.py-2.mx-1.my-2.my-lg-3(href="/chat") Chat
+
+                        if user
+                            li.nav-item
+                                a.nav-link.px-3.py-2.mx-1.my-2.my-lg-3(href="/dashboard") Dashboard
                         li.nav-item
                             a.nav-link.px-3.py-2.mx-1.my-2.my-lg-3(href="/pricing")= user? 'Upgrade' : 'Pricing'
                         li.nav-item
