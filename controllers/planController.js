@@ -69,10 +69,9 @@ exports.handleWebhook = function (req, res, next) {
 };
 
 async function updateUserPlan(session) {
-  console.log('what is this');
   const planId = session.client_reference_id;
-  const user = await User.findOne({ email: session.customer_email });
-  console.log('this is pussy');
+  const user = await User.findById('6468ad36b248aebe94c1b903');
+  console.log('what about now');
   user.subscription = planId;
 
   await user.save({ validateBeforeSave: false });
