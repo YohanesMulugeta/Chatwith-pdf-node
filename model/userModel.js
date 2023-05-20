@@ -116,13 +116,12 @@ userSchema.pre('save', function (next) {
 // new subscriptions
 userSchema.pre('save', async function (next) {
   console.log('lala new zare');
-  console.log(this.subscription);
 
   if (!this.isModified('subscription')) return next();
   console.log('pussy atihun');
 
   const plan = await Plan.findById(this.subscription);
-  console.log(plan);
+
   this.subscription = plan._id;
   this.subscriptionUpdatedAt = Date.now();
   this.conversationTokens = plan.conversationTokenLimit;
