@@ -118,7 +118,7 @@ userSchema.pre('save', async function (next) {
   if (!this.isModified('subscription')) return next();
 
   const plan = await Plan.findById(this.subscription);
-
+  console.log(plan);
   this.subscription = plan._id;
   this.subscriptionUpdatedAt = Date.now();
   this.conversationTokens = plan.conversationTokenLimit;
