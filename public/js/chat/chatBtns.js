@@ -1,10 +1,9 @@
 import { removeProgress, showProgress } from '../reusables/showProgressBtn.js';
-import Chat from './chatN.js';
 import showError from '../reusables/showError.js';
 import makeRequest from '../reusables/fetch.js';
 import { showAlert } from '../reusables/alert.js';
 import { uploadPdf } from '../uploadN.js';
-import { resetMessageInputContainer } from './chatN.js';
+import Chat, { resetMessageInputContainer, currentChat } from './chatN.js';
 
 const sidebar = document.querySelector('.upload-chat-btn-container');
 
@@ -89,10 +88,6 @@ export async function handleChatBtns(e) {
   }
 }
 
-// ///////////// //
-//    HELEPERS  //
-//  ////////// //
-
 function handleUndo(e) {
   // garbage collection
   this.targetBtn.removeEventListener('click', this.handler);
@@ -115,6 +110,7 @@ async function deleteChat(btn, chatid, intervalId) {
   await makeRequest({ method: 'delete', url: `/api/v1/pdf/chat/${chatid}` });
 
   const container = btn.closest('.chat-btn-delete-container');
+  if (container.querySelector('.active-chat-btn')) currentChat.collectGarbage();
 
   container.classList.add('success-deletion');
   container.innerHTML = `<i class="bi bi-check-circle-fill"></i>`;
@@ -196,6 +192,10 @@ async function handleResetChat(e) {
   chatLoader?.classList.add('hidden');
   btnReset.removeAttribute('disabled');
 }
+
+// ///////////// //
+//    HELEPERS  //
+//  ////////// //
 
 // helpers
 function getChatId(el) {

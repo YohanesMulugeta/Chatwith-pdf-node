@@ -1,7 +1,7 @@
 import makeRequest from '../reusables/fetch.js';
 import showError from '../reusables/showError.js';
 
-let currentChat;
+export let currentChat;
 const messagesInputContainer = document.querySelector('.chat-container');
 
 class Chat {
