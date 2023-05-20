@@ -22,7 +22,9 @@ block content
                     .stat-header
                     .py-3.px-4.bg-white.rounded-3.border.border-1
                         h3.fw-bold.mt-2 Current Subscription
-                        h5= subscription.slice(0,1).toUpperCase() + subscription.slice(1)
+                        .d-flex.justify-content-between.align-items-center
+                            h5= subscription.slice(0,1).toUpperCase() + subscription.slice(1)
+                            a.btn.btn-outline-primary(href='/pricing') Upgrade
                 .col-lg-4.mt-3.p-3.dashboard-card
                     .stat-header
                     .py-3.px-4.bg-white.rounded-3.border.border-1

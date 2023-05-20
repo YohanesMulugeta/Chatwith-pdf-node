@@ -167,8 +167,6 @@ class Chat {
 
     const text = this.getBotMess(copyBtn);
 
-    console.log(text);
-
     navigator.clipboard.writeText(text);
 
     copyBtn.innerHTML = '<i class="bi bi-clipboard2-check-fill"></i>';

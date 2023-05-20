@@ -116,7 +116,7 @@ userSchema.pre('save', function (next) {
 // new subscriptions
 userSchema.pre('save', async function (next) {
   if (!this.isModified('subscription')) return next();
-  console.log('fevs wet pussy');
+
   const plan = await Plan.findById(this.subscription);
 
   // this.subscription = plan._id;
