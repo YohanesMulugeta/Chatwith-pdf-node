@@ -125,6 +125,7 @@ userSchema.pre('save', async function (next) {
   this.uploadTokens = plan.uloadTokenLimit;
 
   console.log(this);
+  console.log('lala new bakih');
 
   next();
 });
