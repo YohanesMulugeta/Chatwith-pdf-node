@@ -8,13 +8,14 @@ const messagesInputContainer = document.querySelector('.chat-container');
 class Chat {
   promptInput = document.getElementById('user-input');
   generateBtn = document.querySelector('.btn-ask');
-  // chatTitle = document.querySelector('.chat-title');
   state = { docName: '', chatTitle: '', history: [] };
+  copyBtnMarkup = `<button class="btn-copy btn btn-outline-primary">
+                      <i class="bi bi-clipboard2"></i>
+                   </button>`;
 
   constructor({ chatTitle, docName, _id, chatHistory }) {
     this.state.chatTitle = chatTitle;
     this.state.docName = docName;
-    // this.chatTitle.textContent = chatTitle;
     this.state.history = chatHistory ? chatHistory : [];
     this.state.chatId = _id;
     this.url = `ws://localhost:8000/api/v1/pdf/chat/${_id}`;
@@ -27,7 +28,7 @@ class Chat {
 
   // initialize
   init() {
-    this.socket.onmessage = this.addBotMessageN;
+    this.socket.onmessage = this.addWebsocketResponse;
     resetMessageInputContainer();
     this.chatContainer = document.querySelector('.messages-container');
     this.generateBtn.addEventListener('click', this.handleGenerateBtn);
@@ -65,7 +66,7 @@ class Chat {
     }
   };
 
-  addBotMessageN = (event) => {
+  addWebsocketResponse = (event) => {
     const message = JSON.parse(event.data);
     const lastBotMessage = document.querySelector('.last-bot-message');
     if (message.event === 'data') {
@@ -130,7 +131,9 @@ class Chat {
         <div class='d-flex justify-content-start loader-chat-bot'>
           <div class='spinner-grow text-primary loader' role='status'>
         </div>`
-      : ` <div class='text-to-be-copy'>${resultText}</div>`;
+      : ` <div class='text-to-be-copy'>${window.markdownit().render(resultText)}</div>${
+          this.copyBtnMarkup
+        }`;
 
     document.querySelector('.last-bot-message')?.classList.remove('last-bot-message');
     const botDiv = document.createElement('div');
@@ -140,23 +143,17 @@ class Chat {
     botDiv.classList.add('last-bot-message');
     this.chatContainer.appendChild(botDiv);
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
-
-    // botDiv.scrollIntoView();
   }
 
   // --------------------- THSI WILL REPLACE THE LOADING BOT WITH THE ACTULA MESSAGE
   replaceTypingEffect() {
     if (currentChat !== this) return;
     document.querySelector('.loader-chat-bot')?.remove();
-    document.querySelector('.last-bot-message')?.insertAdjacentHTML(
-      'beforeend',
-      ` <button class="btn-copy btn btn-outline-primary">
-          <i class="bi bi-clipboard2"></i>
-        </button>`
-    );
+    document
+      .querySelector('.last-bot-message')
+      ?.insertAdjacentHTML('beforeend', this.copyBtnMarkup);
 
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
-    // lastBotMessage.scrollIntoView();
   }
 
   // -------------------- SOURCE RENDERER
@@ -238,7 +235,7 @@ class Chat {
   // ----------------- RESET SOCKET
   resetWebsocket(question) {
     this.socket = new WebSocket(this.url);
-    this.socket.onmessage = this.addBotMessageN;
+    this.socket.onmessage = this.addWebsocketResponse;
 
     setTimeout(() => {
       this.socket.readyState === WebSocket.OPEN && this.socket.send(question);

@@ -2,10 +2,17 @@ import { removeProgress, showProgress } from '../reusables/showProgressBtn.js';
 import showError from '../reusables/showError.js';
 import makeRequest from '../reusables/fetch.js';
 import { showAlert } from '../reusables/alert.js';
-import { uploadPdf } from '../uploadN.js';
+import fetchAndDisplay, { uploadPdf } from '../uploadN.js';
 import Chat, { resetMessageInputContainer, currentChat } from './chatN.js';
 
 const sidebar = document.querySelector('.upload-chat-btn-container');
+const dropZone = document.querySelector('.drop-zone');
+const btnDropSection = document.querySelector('.button-dropsection');
+const input = document.getElementById('file');
+const chatColumnLeft = document.querySelector('.chat-column-left');
+// const btnTools = document.querySelector('.button-tools');
+const expandSideBar = document.querySelector('.btn-open-sidebar');
+const chatBtnContainer = document.querySelector('.chat-btn-container');
 
 const baseUrl = '/api/v1/pdf/';
 let handler;
@@ -231,3 +238,34 @@ export function handleLeftColHide(e) {
 export function handleSidebarExpandHide() {
   sidebar.classList.toggle('mobile-hidden');
 }
+
+// Open chat btns
+chatBtnContainer?.addEventListener('click', handleChatBtns);
+
+// DrodDown
+dropZone?.addEventListener('dragleave', (e) => {
+  dropZone.classList.remove('drop-zone--active');
+});
+
+dropZone?.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropZone.classList.add('drop-zone--active');
+});
+
+expandSideBar?.addEventListener('click', handleSidebarExpandHide);
+
+dropZone?.addEventListener('drop', async (e) => {
+  e.preventDefault();
+  dropZone.classList.remove('drop-zone--active');
+
+  fetchAndDisplay(e);
+});
+
+dropZone?.addEventListener('click', () => {
+  input.value = '';
+  input.click();
+});
+
+input?.addEventListener('change', async () => {
+  if (input.files[0]) fetchAndDisplay(input.files[0], true);
+});
