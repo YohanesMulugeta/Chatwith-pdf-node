@@ -45,7 +45,7 @@ async function extractTextFromPdf(file) {
 // ------------ form txt
 async function extractTextFromTxt(file) {
   const text = await file.text();
-  console.log(text);
+  // console.log(text);
   return text;
 }
 

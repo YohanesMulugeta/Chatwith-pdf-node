@@ -68,7 +68,7 @@ exports.loadDoc = async function loadPdf(file, fileType, check = true) {
 
   const splitted = await spiltText(text, check);
 
-  console.log(tokens);
+  // console.log(tokens);
 
   //  store in the pinecone
 
@@ -89,7 +89,7 @@ async function spiltText(text, check = true) {
 
   const output = await splitter.createDocuments([text]);
 
-  console.log('parsed end///////');
+  // console.log('parsed end///////');
 
   return output;
 }

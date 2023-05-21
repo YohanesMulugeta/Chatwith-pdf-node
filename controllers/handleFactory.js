@@ -38,7 +38,7 @@ exports.getByIdAndUpdate = (Model, param = 'id') =>
       new: true,
     };
 
-    console.log(req.body);
+    // console.log(req.body);
 
     const updatedDoc = await (param === 'id'
       ? Model.findByIdAndUpdate(value, req.body, options)

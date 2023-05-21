@@ -164,7 +164,7 @@ export async function handleChatTools(e) {
 
     if (e.target.closest('.btn-add-document')) {
       addDocumentInput.click();
-      console.log('clicked');
+      // console.log('clicked');
     }
   } catch (err) {}
 }
