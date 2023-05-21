@@ -22,7 +22,7 @@ exports.pineconeClient = client;
 })();
 // const pineconeIndex = client.Index(process.env.PINECONE_INDEX);
 
-exports.loadDoc = async function loadPdf(file, fileType, check = true) {
+exports.loadDoc = async function loadPdf({ file, fileType, check = true, originalName }) {
   let text, loader, opt;
 
   const fileDir = `${__dirname}/../temp/uploads/${file}`;
@@ -66,7 +66,7 @@ exports.loadDoc = async function loadPdf(file, fileType, check = true) {
 
   const tokens = text.length / 3.8;
 
-  const splitted = await spiltText(text, check);
+  const splitted = await spiltText(text, check, originalName);
 
   // console.log(tokens);
 
@@ -77,7 +77,7 @@ exports.loadDoc = async function loadPdf(file, fileType, check = true) {
   // if (!isFile) return spiltText(file, check);
 };
 
-async function spiltText(text, check = true) {
+async function spiltText(text, check = true, originalName) {
   if (check)
     if (!text || text?.length < 300)
       throw new AppError('No readable text stream or very small readable data');
@@ -88,6 +88,11 @@ async function spiltText(text, check = true) {
   });
 
   const output = await splitter.createDocuments([text]);
+
+  if (originalName)
+    output.forEach((out) => {
+      out.pageContent += `Document-title: ${originalName}`;
+    });
 
   // console.log('parsed end///////');
 

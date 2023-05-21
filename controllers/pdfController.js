@@ -38,7 +38,16 @@ exports.uploadPdf = upload.single('document');
 // ---------------- parse docs
 exports.parseDoc = catchAsync(async function (req, res, next) {
   const file = req.fileName || req.body.text;
-  const { splitted: parsedDoc, tokens } = await loadDoc(file, req.type);
+
+  const opt = {
+    file: file,
+    fileType: req.type,
+    originalName: req.originalName || req.body.originalName,
+  };
+
+  // console.log(req.body.originalName);
+
+  const { splitted: parsedDoc, tokens } = await loadDoc(opt);
 
   req.parsedDoc = parsedDoc;
   req.tokens = tokens;
