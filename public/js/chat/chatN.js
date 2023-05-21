@@ -19,11 +19,15 @@ class Chat {
     this.state.history = chatHistory ? chatHistory : [];
     this.state.chatId = _id;
     // this.url = `wss://${location.hostname}/api/v1/pdf/chat/${_id}`;
-    this.url = `ws://localhost:8000/api/v1/pdf/chat/${_id}`;
-    this.socket = new WebSocket(`ws://localhost:8000/api/v1/pdf/chat/${_id}`);
+    this.url = `ws${location.protocol === 'https' ? 's' : ''}://${
+      location.hostname === 'localhost' ? 'localhost:8000' : location.hostname
+    }/api/v1/pdf/chat/${_id}`;
+
+    this.socket = new WebSocket(this.url);
     // this.socket = new WebSocket(`wss://${location.hostname}/api/v1/pdf/chat/${_id}`);
 
     this.setCurrentChat(this);
+    console.log(this.url);
 
     this.init();
   }
