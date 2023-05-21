@@ -6,6 +6,7 @@ const pdfController = require('../controllers/pdfController');
 const router = express.Router();
 
 router.use(authController.protect);
+// router.ws('/chat/:chatId', authController.chat);
 
 router
   .route('/processpdf')

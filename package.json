@@ -21,6 +21,7 @@
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.7.0",
     "express-session": "^1.17.3",
+    "express-ws": "^5.0.2",
     "google-auth-library": "^8.7.0",
     "helmet": "^6.0.1",
     "hpp": "^0.2.3",
@@ -37,6 +38,7 @@
     "pug": "^3.0.2",
     "slugify": "^1.6.5",
     "stripe": "^12.3.0",
+    "ws": "^8.13.0",
     "xss-clean": "^0.1.1"
   },
   "engines": {

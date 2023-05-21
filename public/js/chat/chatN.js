@@ -4,6 +4,24 @@ import showError from '../reusables/showError.js';
 export let currentChat;
 const messagesInputContainer = document.querySelector('.chat-container');
 
+// socket.onopen = () => {
+//   // console.log('pussy');
+//   // socket.send('what are yohanes mulugetas skils?');
+
+//   setTimeout(() => {
+//     console.log('pussy');
+//     socket.send('what are yohanes mulugetas skils?');
+//   }, 5000);
+// };
+
+// socket.onmessage = (msg) => {
+//   console.log(msg.data);
+// };
+
+// console.log(location.hostname);
+
+// copy btn
+
 class Chat {
   promptInput = document.getElementById('user-input');
   generateBtn = document.querySelector('.btn-ask');
@@ -16,7 +34,8 @@ class Chat {
     // this.chatTitle.textContent = chatTitle;
     this.state.history = chatHistory ? chatHistory : [];
     this.state.chatId = _id;
-    this.url = `api/v1/pdf/chat/${_id}`;
+    this.url = `ws://localhost:8000/api/v1/pdf/chat/${_id}`;
+    this.socket = new WebSocket(`ws://localhost:8000/api/v1/pdf/chat/${_id}`);
 
     this.setCurrentChat(this);
 
@@ -25,6 +44,7 @@ class Chat {
 
   // initialize
   init() {
+    this.socket.onmessage = this.addBotMessageN;
     resetMessageInputContainer();
     this.chatContainer = document.querySelector('.messages-container');
     this.generateBtn.addEventListener('click', this.handleGenerateBtn);
@@ -62,29 +82,36 @@ class Chat {
     }
   };
 
-  // ---------------------- SENDS QUESTION TO THE BACK END
-  async sendQuestion(question) {
-    try {
-      this.addUserMessage(question);
-      this.addBotMessage('Loading...', true);
+  addBotMessageN = (event) => {
+    const message = JSON.parse(event.data);
+    const lastBotMessage = document.querySelector('.last-bot-message');
+    if (message.event === 'data') {
+      // console.log(message.data);
+      lastBotMessage.querySelector('.text-to-be-copy').innerText += message.data;
 
-      const dataTobeSent = {
-        question: question,
-        // history: this.state.history,
-        docName: this.state.docName,
-      };
-
-      const { data } = await makeRequest({ dataTobeSent, url: this.url, method: 'post' });
-
-      this.replaceTypingEffect(data.response.text, data.response.sourceDocuments);
-    } catch (err) {
-      this.replaceTypingEffect('Something went wrong. Please Try Again!');
-      showError(err, this.generateBtn, 'Try Again!');
-      setTimeout(() => {
-        this.generateBtn.innerHTML = `<i class='bi bi-send'></i>`;
-      });
-      // location.reload(true);
+      this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
     }
+
+    if (message.event === 'source') {
+      message.source.forEach((source, i) => {
+        const formatedPageContent = window.markdownit().render(source.pageContent);
+        this.renderSourceAccordion(formatedPageContent, lastBotMessage, i);
+      });
+      this.replaceTypingEffect();
+    }
+
+    if (message.event === 'error') {
+      return console.log(message.error);
+    }
+  };
+
+  // ---------------------- SENDS QUESTION TO THE BACK END
+  sendQuestion(question) {
+    this.addUserMessage(question);
+    this.addBotMessage('Loading...', true);
+
+    console.log(this.socket.readyState);
+    this.socket.send(question);
   }
 
   // ---------------- RENDERS USER QUESTION
@@ -100,13 +127,11 @@ class Chat {
   //--------------- create new html instance for BOT message
   addBotMessage(resultText, load = false) {
     const formatedText = load
-      ? `<div class='d-flex justify-content-start loader-chat-bot'>
-              <div class='spinner-grow text-primary loader' role='status'></div>
-          </div>`
-      : `<div class='text-to-be-copy'>${window.markdownit().render(resultText)}</div>` +
-        ` <button class="btn-copy btn btn-outline-primary">
-          <i class="bi bi-clipboard2"></i>
-        </button>`;
+      ? `<div class='text-to-be-copy'></div>
+        <div class='d-flex justify-content-start loader-chat-bot'>
+          <div class='spinner-grow text-primary loader' role='status'>
+        </div>`
+      : ` <div class='text-to-be-copy'>${resultText}</div>`;
 
     document.querySelector('.last-bot-message')?.classList.remove('last-bot-message');
     const botDiv = document.createElement('div');
@@ -121,18 +146,15 @@ class Chat {
   }
 
   // --------------------- THSI WILL REPLACE THE LOADING BOT WITH THE ACTULA MESSAGE
-  replaceTypingEffect(botText, sourceDocuments) {
+  replaceTypingEffect() {
     if (currentChat !== this) return;
-
-    const lastBotMessage = document.querySelector('.last-bot-message');
-    const formatedText = window.markdownit().render(botText);
-    lastBotMessage.innerHTML = formatedText;
-
-    if (sourceDocuments)
-      sourceDocuments.forEach((source, i) => {
-        const formatedPageContent = window.markdownit().render(source.pageContent);
-        this.renderSourceAccordion(formatedPageContent, lastBotMessage, i);
-      });
+    document.querySelector('.loader-chat-bot')?.remove();
+    document.querySelector('.last-bot-message')?.insertAdjacentHTML(
+      'beforeend',
+      ` <button class="btn-copy btn btn-outline-primary">
+          <i class="bi bi-clipboard2"></i>
+        </button>`
+    );
 
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
     // lastBotMessage.scrollIntoView();
@@ -208,6 +230,7 @@ class Chat {
 
   // ------------ GARBAGE COLLECTOR
   collectGarbage() {
+    this.socket.close();
     this.generateBtn.removeEventListener('click', this.handleGenerateBtn);
     this.promptInput.removeEventListener('keyup', this.handleEnterKey);
     this.chatContainer.removeEventListener('click', this.handleCopy);
@@ -227,7 +250,5 @@ export function resetMessageInputContainer() {
       </div>`
   );
 }
-
-// copy btn
 
 /*; */

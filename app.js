@@ -8,15 +8,16 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const compression = require('compression');
 
+const app = express();
+const expressWs = require('express-ws')(app);
 const userRouter = require('./routes/userRouter');
 const pdfRouter = require('./routes/processPdfRouter');
+const websocketRouter = require('./routes/websocketRouter');
 const viewRouter = require('./routes/viewRouter');
 const planRouter = require('./routes/planRouter');
 const planController = require('./controllers/planController');
 const appErrorHandler = require('./controllers/errorController');
 const AppError = require('./util/AppError');
-
-const app = express();
 
 app.use(
   '/webhook-checkout',
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 app.use(hpp());
 
+app.use('/api/v1/pdf', websocketRouter);
 app.use(express.static('public'));
 
 app.set('view engine', 'pug');
@@ -82,7 +84,6 @@ app.use(compression());
 app.use(mongoSanitize({ replaceWith: '_' }));
 
 app.use(xss());
-
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/pdf', pdfRouter);
 app.use('/api/v1/plans', planRouter);
