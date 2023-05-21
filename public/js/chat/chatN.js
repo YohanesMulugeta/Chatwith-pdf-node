@@ -18,10 +18,10 @@ class Chat {
     this.state.docName = docName;
     this.state.history = chatHistory ? chatHistory : [];
     this.state.chatId = _id;
-    // this.url = `wss://${location.hostname}/api/v1/pdf/chat/${_id}`;
-    this.url = `wss://${
-      location.hostname === 'localhost' ? 'localhost:8000' : location.hostname
-    }/api/v1/pdf/chat/${_id}`;
+    this.url = `wss://${location.hostname}/api/v1/pdf/chat/${_id}`;
+    // this.url = `wss://${
+    //   location.hostname === 'localhost' ? 'localhost:8000' : location.hostname
+    // }/api/v1/pdf/chat/${_id}`;
 
     this.socket = new WebSocket(this.url);
     // this.socket = new WebSocket(`wss://${location.hostname}/api/v1/pdf/chat/${_id}`);
