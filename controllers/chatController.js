@@ -114,6 +114,7 @@ async function checkLoginStatus(req) {
   // ------------------- Check if user is logged in or not
   const token = req.cookies.jwt;
 
+  console.log('pussy');
   console.log(token);
 
   if (token === undefined)
