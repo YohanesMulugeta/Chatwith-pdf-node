@@ -1,26 +1,9 @@
+import { showAlert } from '../reusables/alert.js';
 import makeRequest from '../reusables/fetch.js';
 import showError from '../reusables/showError.js';
 
 export let currentChat;
 const messagesInputContainer = document.querySelector('.chat-container');
-
-// socket.onopen = () => {
-//   // console.log('pussy');
-//   // socket.send('what are yohanes mulugetas skils?');
-
-//   setTimeout(() => {
-//     console.log('pussy');
-//     socket.send('what are yohanes mulugetas skils?');
-//   }, 5000);
-// };
-
-// socket.onmessage = (msg) => {
-//   console.log(msg.data);
-// };
-
-// console.log(location.hostname);
-
-// copy btn
 
 class Chat {
   promptInput = document.getElementById('user-input');
@@ -101,6 +84,13 @@ class Chat {
     }
 
     if (message.event === 'error') {
+      showAlert(
+        'danger',
+        message.statusCode === 500
+          ? 'Something Went wrong. Please Try again!'
+          : message.error
+      );
+      document.querySelector('.last-bot-message')?.remove();
       return console.log(message.error);
     }
   };
@@ -110,7 +100,16 @@ class Chat {
     this.addUserMessage(question);
     this.addBotMessage('Loading...', true);
 
-    console.log(this.socket.readyState);
+    // Check websocket status and make a reset if needed
+    if (
+      this.socket.readyState === WebSocket.CLOSED ||
+      this.socket.readyState === WebSocket.CLOSING
+    ) {
+      this.resetWebsocket(question);
+
+      return;
+    }
+
     this.socket.send(question);
   }
 
@@ -234,6 +233,28 @@ class Chat {
     this.generateBtn.removeEventListener('click', this.handleGenerateBtn);
     this.promptInput.removeEventListener('keyup', this.handleEnterKey);
     this.chatContainer.removeEventListener('click', this.handleCopy);
+  }
+
+  // ----------------- RESET SOCKET
+  resetWebsocket(question) {
+    this.socket = new WebSocket(this.url);
+    this.socket.onmessage = this.addBotMessageN;
+
+    setTimeout(() => {
+      this.socket.readyState === WebSocket.OPEN && this.socket.send(question);
+      if (
+        this.socket.readyState === WebSocket.CLOSED ||
+        this.socket.readyState === WebSocket.CLOSING
+      ) {
+        showAlert(
+          'danger',
+          'Something went wrong on trying to connect to the websocket. please try again'
+        );
+        setTimeout(() => {
+          location.reload(true);
+        }, 1000);
+      }
+    }, 3000);
   }
 }
 

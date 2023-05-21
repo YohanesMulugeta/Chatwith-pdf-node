@@ -227,6 +227,7 @@ exports.addPdfIntoChat = catchAsync(async function (req, res, next) {
 // ------------------------ WEBSOCKET Chat
 exports.chat = async (ws, req) => {
   try {
+    console.log('connect try');
     const { authorization } = req.headers;
     const token =
       (authorization?.startsWith('Bearer') && authorization.split(' ')[1]) ||
@@ -277,9 +278,9 @@ exports.chat = async (ws, req) => {
 
     // question and answer
     ws.on('message', async (question) => {
-      const userN = await User.findById(user._id).select('+chats.chatHistory');
-      const chatHistory = userN.chats.id(chatId).chatHistory.slice(-5);
       try {
+        const userN = await User.findById(user._id).select('+chats.chatHistory');
+        const chatHistory = userN.chats.id(chatId).chatHistory.slice(-5);
         let space = 0;
         const streamHandler = {
           handleLLMNewToken(token) {
@@ -317,11 +318,23 @@ exports.chat = async (ws, req) => {
           .chatHistory.push([`Question: ${question}`, `Answer: ${response.text}`]);
         userN.updateChatModifiedDate(chatId);
       } catch (err) {
-        console.log(err);
+        ws.send(
+          JSON.stringify({
+            event: 'error',
+            error: err.message,
+            statusCode: err.statusCode ? err.statusCode : 500,
+          })
+        );
       }
     });
   } catch (err) {
-    ws.send(JSON.stringify({ event: 'error', error: err }));
+    ws.send(
+      JSON.stringify({
+        event: 'error',
+        error: err.message,
+        statusCode: err.statusCode ? err.statusCode : 500,
+      })
+    );
   }
 };
 
