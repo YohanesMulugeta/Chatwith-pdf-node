@@ -18,8 +18,8 @@ class Chat {
     this.state.docName = docName;
     this.state.history = chatHistory ? chatHistory : [];
     this.state.chatId = _id;
-    this.url = `ws://localhost:8000/api/v1/pdf/chat/${_id}`;
-    this.socket = new WebSocket(`ws://localhost:8000/api/v1/pdf/chat/${_id}`);
+    this.url = `ws://${location.hostname}/api/v1/pdf/chat/${_id}`;
+    this.socket = new WebSocket(`ws://${location.hostname}/api/v1/pdf/chat/${_id}`);
 
     this.setCurrentChat(this);
 
