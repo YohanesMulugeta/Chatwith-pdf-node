@@ -153,7 +153,7 @@ class Chat {
       .querySelector('.last-bot-message')
       ?.insertAdjacentHTML('beforeend', this.copyBtnMarkup);
 
-    this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+    // this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
   }
 
   // -------------------- SOURCE RENDERER
