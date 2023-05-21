@@ -112,10 +112,7 @@ exports.chat = async (ws, req) => {
 // Checks login Status
 async function checkLoginStatus(req) {
   // ------------------- Check if user is logged in or not
-  const { authorization } = req.headers;
-  const token =
-    (authorization?.startsWith('Bearer') && authorization.split(' ')[1]) ||
-    req.cookies.jwt;
+  const token = req.cookies.jwt;
 
   if (!token)
     throw new AppError(
