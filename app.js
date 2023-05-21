@@ -12,7 +12,7 @@ const app = express();
 const expressWs = require('express-ws')(app);
 const userRouter = require('./routes/userRouter');
 const pdfRouter = require('./routes/processPdfRouter');
-const websocketRouter = require('./routes/websocketRouter');
+const chatRouter = require('./routes/chatRouter');
 const viewRouter = require('./routes/viewRouter');
 const planRouter = require('./routes/planRouter');
 const planController = require('./controllers/planController');
@@ -31,7 +31,7 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 app.use(hpp());
 
-app.use('/api/v1/pdf', websocketRouter);
+app.use('/api/v1/pdf', chatRouter);
 app.use(express.static('public'));
 
 app.set('view engine', 'pug');

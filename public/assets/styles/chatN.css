@@ -245,7 +245,7 @@ body {
 .loader-chat-bot > .loader {
   width: 1rem;
   height: 1rem;
-  display: block;
+  display: inline-block;
 }
 .chat-loader {
   position: relative;
