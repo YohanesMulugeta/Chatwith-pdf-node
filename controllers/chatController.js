@@ -114,7 +114,9 @@ async function checkLoginStatus(req) {
   // ------------------- Check if user is logged in or not
   const token = req.cookies.jwt;
 
-  if (!token)
+  console.log(token);
+
+  if (token === undefined)
     throw new AppError(
       'You are not loged in. Please login or register and try again.',
       401
