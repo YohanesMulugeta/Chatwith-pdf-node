@@ -273,6 +273,8 @@ export function resetMessageInputContainer() {
         </div>
       </div>`
   );
+
+  currentChat.chatContainer = document.querySelector('.messages-container');
 }
 
 /*; */
