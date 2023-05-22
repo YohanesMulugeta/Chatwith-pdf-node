@@ -233,10 +233,7 @@ exports.forgotPassword = catchAsync(async function (req, res, next) {
 
   await user.save({ validateBeforeSave: false });
 
-  const base =
-    process.env.NODE_ENV === 'production'
-      ? 'https://zyno-ink.cyclic.app'
-      : 'http://localhost:8000';
+  const base = `${req.protocol}://${req.get('host')}`;
 
   const url = `${base}/resetpassword/${token}`;
 
