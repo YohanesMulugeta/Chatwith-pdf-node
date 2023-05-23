@@ -18,7 +18,7 @@ class Chat {
     this.state.docName = docName;
     this.state.history = chatHistory ? chatHistory : [];
     this.state.chatId = _id;
-    this.url = `wss://${location.hostname}/api/v1/pdf/chat/${_id}`;
+    this.url = `ws://${location.hostname}:8000/api/v1/pdf/chat/${_id}`;
     // this.url = `wss://${
     //   location.hostname === 'localhost' ? 'localhost:8000' : location.hostname
     // }/api/v1/pdf/chat/${_id}`;
@@ -35,10 +35,10 @@ class Chat {
   // initialize
   init() {
     this.socket.onmessage = this.addWebsocketResponse;
+    this.socket.onclose = this.handleSocketClose;
     resetMessageInputContainer();
     this.chatContainer = document.querySelector('.messages-container');
-    this.generateBtn.addEventListener('click', this.handleGenerateBtn);
-    this.promptInput.addEventListener('keyup', this.handleEnterKey);
+    this.addListnersForInput();
     this.chatContainer.addEventListener('click', this.handleCopy);
     this.populateHistory();
   }
@@ -61,44 +61,14 @@ class Chat {
   handleGenerateBtn = (e) => {
     e.preventDefault();
     const value = this.promptInput.value;
-    this.promptInput.value = '';
     this.sendQuestion(value);
+    this.promptInput.value = '';
   };
 
   handleEnterKey = (e) => {
     if (e.key === 'Enter') {
       this.sendQuestion(this.promptInput.value);
       this.promptInput.value = '';
-    }
-  };
-
-  addWebsocketResponse = (event) => {
-    const message = JSON.parse(event.data);
-    const lastBotMessage = document.querySelector('.last-bot-message');
-    if (message.event === 'data') {
-      // console.log(message.data);
-      lastBotMessage.querySelector('.text-to-be-copy').innerText += message.data;
-
-      this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
-    }
-
-    if (message.event === 'source') {
-      message.source.forEach((source, i) => {
-        const formatedPageContent = window.markdownit().render(source.pageContent);
-        this.renderSourceAccordion(formatedPageContent, lastBotMessage, i);
-      });
-      this.replaceTypingEffect();
-    }
-
-    if (message.event === 'error') {
-      showAlert(
-        'danger',
-        message.statusCode === 500
-          ? 'Something Went wrong. Please Try again!'
-          : message.error
-      );
-      document.querySelector('.last-bot-message')?.remove();
-      return console.log(message.error);
     }
   };
 
@@ -118,6 +88,52 @@ class Chat {
     }
 
     this.socket.send(question);
+    this.removeListnerForInput();
+  }
+
+  addWebsocketResponse = (event) => {
+    const message = JSON.parse(event.data);
+    const lastBotMessage = document.querySelector('.last-bot-message');
+    if (message.event === 'data') {
+      // console.log(message.data);
+      lastBotMessage.querySelector('.text-to-be-copy').innerText += message.data;
+
+      this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+    }
+
+    if (message.event === 'source') {
+      this.replaceTypingEffect();
+      message.source.forEach((source, i) => {
+        const formatedPageContent = window.markdownit().render(source.pageContent);
+        this.renderSourceAccordion(formatedPageContent, lastBotMessage, i);
+      });
+    }
+
+    if (message.event === 'error') {
+      this.removeListnerForInput();
+      this.addListnersForInput();
+      showAlert(
+        'danger',
+        message.statusCode === 500
+          ? 'Something Went wrong. Please Try again!'
+          : message.error
+      );
+      document.querySelector('.last-bot-message')?.remove();
+      return console.log(message.error);
+    }
+  };
+
+  // --------------------- THSI WILL REPLACE THE LOADING BOT WITH THE ACTULA MESSAGE
+  replaceTypingEffect() {
+    if (currentChat !== this) return;
+    this.addListnersForInput();
+
+    document.querySelector('.loader-chat-bot')?.remove();
+    document
+      .querySelector('.last-bot-message')
+      ?.insertAdjacentHTML('beforeend', this.copyBtnMarkup);
+
+    // this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
   }
 
   // ---------------- RENDERS USER QUESTION
@@ -149,17 +165,6 @@ class Chat {
     botDiv.classList.add('last-bot-message');
     this.chatContainer.appendChild(botDiv);
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
-  }
-
-  // --------------------- THSI WILL REPLACE THE LOADING BOT WITH THE ACTULA MESSAGE
-  replaceTypingEffect() {
-    if (currentChat !== this) return;
-    document.querySelector('.loader-chat-bot')?.remove();
-    document
-      .querySelector('.last-bot-message')
-      ?.insertAdjacentHTML('beforeend', this.copyBtnMarkup);
-
-    // this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
   }
 
   // -------------------- SOURCE RENDERER
@@ -225,6 +230,18 @@ class Chat {
     currentChat = chat;
   }
 
+  // ------------ add Event listners for the input filed
+  addListnersForInput() {
+    this.generateBtn.addEventListener('click', this.handleGenerateBtn);
+    this.promptInput.addEventListener('keyup', this.handleEnterKey);
+  }
+
+  // ---------------- Remove Listners
+  removeListnerForInput() {
+    this.generateBtn.removeEventListener('click', this.handleGenerateBtn);
+    this.promptInput.removeEventListener('keyup', this.handleEnterKey);
+  }
+
   // ---------- HELPER TO GET BOT MESSAGE
   getBotMess(el) {
     return el.closest('.bot-message').querySelector('.text-to-be-copy').innerText;
@@ -238,10 +255,21 @@ class Chat {
     this.chatContainer.removeEventListener('click', this.handleCopy);
   }
 
+  // -------- handleClose
+  handleSocketClose = () => {
+    if (this !== currentChat) return;
+
+    showAlert(
+      'danger',
+      'Something went wrong on trying to connect to the websocket. We will try to reconnect automatically if you try to send a question.'
+    );
+  };
+
   // ----------------- RESET SOCKET
   resetWebsocket(question) {
     this.socket = new WebSocket(this.url);
     this.socket.onmessage = this.addWebsocketResponse;
+    this.socket.onclose = this.handleSocketClose;
 
     setTimeout(() => {
       this.socket.readyState === WebSocket.OPEN && this.socket.send(question);
