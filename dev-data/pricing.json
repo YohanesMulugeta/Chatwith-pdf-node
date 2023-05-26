@@ -19,15 +19,15 @@
     "name": "Diamond",
     "price": 9.99,
     "maxChats": 12,
-    "description": "",
+    "description": "Diamond",
     "uloadTokenLimit": 6000000,
     "conversationTokenLimit": 2500000
   },
   {
-    "name": "Peremium",
+    "name": "Premium",
     "price": 19.99,
     "maxChats": 25,
-    "description": "",
+    "description": "Premium",
     "uloadTokenLimit": 13000000,
     "conversationTokenLimit": 5000000
   }
