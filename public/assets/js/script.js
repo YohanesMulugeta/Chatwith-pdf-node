@@ -155,7 +155,7 @@ const startSlider = (type) => {
   if (!next) {
     next = container.firstElementChild;
   }
-  console.log(container);
+  
   //remove
   active.classList.remove(['active']); //classlist returns in the form of array so we ['class'] syntax to specify the class we want to remove
   last.classList.remove(['last']);

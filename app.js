@@ -10,6 +10,7 @@ const compression = require('compression');
 
 const app = express();
 const expressWs = require('express-ws')(app);
+
 const userRouter = require('./routes/userRouter');
 const pdfRouter = require('./routes/processPdfRouter');
 const chatRouter = require('./routes/chatRouter');
