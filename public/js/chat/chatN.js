@@ -259,10 +259,10 @@ class Chat {
   handleSocketClose = () => {
     if (this !== currentChat) return;
 
-    showAlert(
-      'danger',
-      'Something went wrong on trying to connect to the websocket. We will try to reconnect automatically if you try to send a question.'
-    );
+    this.socket = new WebSocket(this.url);
+    this.socket.onmessage = this.addWebsocketResponse;
+    this.socket.onclose = this.handleSocketClose;
+
   };
 
   // ----------------- RESET SOCKET
