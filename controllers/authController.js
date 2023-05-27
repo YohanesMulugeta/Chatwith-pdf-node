@@ -115,7 +115,6 @@ exports.signUp = catchAsync(async function (req, res, next) {
     status: 'success',
     message:
       'We have sent an email verification link to your email. Please verify your email within 30 minutes.',
-    emailVerificationToken,
   });
 });
 

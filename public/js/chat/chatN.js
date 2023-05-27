@@ -249,6 +249,8 @@ class Chat {
 
   // ------------ GARBAGE COLLECTOR
   collectGarbage() {
+    this.socket.onclose = undefined;
+    this.socket.onmessage = undefined;
     this.socket.close();
     this.generateBtn.removeEventListener('click', this.handleGenerateBtn);
     this.promptInput.removeEventListener('keyup', this.handleEnterKey);
@@ -259,10 +261,17 @@ class Chat {
   handleSocketClose = () => {
     if (this !== currentChat) return;
 
+    if (document.querySelector('.loader-chat-bot')) {
+      showAlert('danger', 'websocket disconnected while streamin resul.');
+      document.querySelector('.loader-chat-bot').closest('.bot-message').remove();
+    }
+
+    this.removeListnerForInput();
+    this.addListnersForInput();
+
     this.socket = new WebSocket(this.url);
     this.socket.onmessage = this.addWebsocketResponse;
     this.socket.onclose = this.handleSocketClose;
-
   };
 
   // ----------------- RESET SOCKET
