@@ -47,48 +47,48 @@ block content
                     button.btn-outline.btn-primary
                         | Stripe
 
-    // Description section
-    section.how-it-works.py-2.text-center.px-3.px-lg-0
-        .container
-            .row
-                .col-lg-5.mt-4
-                    img.img-fluid.img-description(src="/assets/img/robot-with-books (1).jpg", alt="analysis picture")
-                .col-lg-7.mt-4.d-flex.align-items-center
-                    .div
-                        h2.fw-bold.display-5 How It Works?
-                        h4.fw-bold How Does ChatFiles Work when it compared to other chatbots?
-                        ul.text-lg-start
-                            li
-                                i.bi.bi-robot
-                                b Document collaboration
-                                | - With ChatFiles, users can upload and collaborate on PDF documents
-                                | with AI-powered chatbots, allowing for more efficient 
-                                | and streamlined collaboration compared to other chatbots that are not specifically designed for document collaboration.
-                            li
-                                i.bi.bi-robot
-                                b  Academic research
-                                | - ChatFiles's AI-powered chatbots can help students and researchers quickly
-                                | identify sources and references within academic documents, 
-                                | promoting a more accurate and reliable research process compared to other chatbots that lack this specific functionality.
-                            li
-                                i.bi.bi-robot
-                                b  Document analysis
-                                | - ChatFiles's chatbots can help analysts quickly analyze and interpret complex data 
-                                | within documents,
-                                | providing a more efficient and streamlined analysis process compared to other chatbots that may not have the same level of document
-                                | analysis capabilities.
-                            li
-                                i.bi.bi-robot
-                                b  Personalized learning
-                                | - With ChatFiles's AI-powered chatbots, students and curious minds can engage
-                                | with their documents in a more personalized and intuitive way, receiving feedback and suggestions in real-time, 
-                                | unlike other chatbots that may not be able to provide the same level of personalized engagement.
-                            li
-                                i.bi.bi-robot
-                                b Speed and accuracy
-                                | - ChatFiles's AI-powered chatbots are able to quickly and accurately identify and analyze documents, making the application a more efficient and 
-                                | reliable tool compared to other chatbots that may not be as accurate or speedy in their analysis and interpretation of documents.
-                            li
+    //- // Description section
+    //- section.how-it-works.py-2.text-center.px-3.px-lg-0
+    //-     .container
+    //-         .row
+    //-             .col-lg-5.mt-4
+    //-                 img.img-fluid.img-description(src="/assets/img/robot-with-books (1).jpg", alt="analysis picture")
+    //-             .col-lg-7.mt-4.d-flex.align-items-center
+    //-                 .div
+    //-                     h2.fw-bold.display-5 How It Works?
+    //-                     h4.fw-bold How Does ChatFiles Work when it compared to other chatbots?
+    //-                     ul.text-lg-start
+    //-                         li
+    //-                             i.bi.bi-robot
+    //-                             b Document collaboration
+    //-                             | - With ChatFiles, users can upload and collaborate on PDF documents
+    //-                             | with AI-powered chatbots, allowing for more efficient 
+    //-                             | and streamlined collaboration compared to other chatbots that are not specifically designed for document collaboration.
+    //-                         li
+    //-                             i.bi.bi-robot
+    //-                             b  Academic research
+    //-                             | - ChatFiles's AI-powered chatbots can help students and researchers quickly
+    //-                             | identify sources and references within academic documents, 
+    //-                             | promoting a more accurate and reliable research process compared to other chatbots that lack this specific functionality.
+    //-                         li
+    //-                             i.bi.bi-robot
+    //-                             b  Document analysis
+    //-                             | - ChatFiles's chatbots can help analysts quickly analyze and interpret complex data 
+    //-                             | within documents,
+    //-                             | providing a more efficient and streamlined analysis process compared to other chatbots that may not have the same level of document
+    //-                             | analysis capabilities.
+    //-                         li
+    //-                             i.bi.bi-robot
+    //-                             b  Personalized learning
+    //-                             | - With ChatFiles's AI-powered chatbots, students and curious minds can engage
+    //-                             | with their documents in a more personalized and intuitive way, receiving feedback and suggestions in real-time, 
+    //-                             | unlike other chatbots that may not be able to provide the same level of personalized engagement.
+    //-                         li
+    //-                             i.bi.bi-robot
+    //-                             b Speed and accuracy
+    //-                             | - ChatFiles's AI-powered chatbots are able to quickly and accurately identify and analyze documents, making the application a more efficient and 
+    //-                             | reliable tool compared to other chatbots that may not be as accurate or speedy in their analysis and interpretation of documents.
+    //-                         li
         // Formatts
     section.flip-card-container.py-4.px-3.px-lg-0.bg-turiLight
         h2.fw-bold.display-5.text-center Supported File Formats
@@ -116,63 +116,6 @@ block content
         -for(let i = 0; i < plans.length; i++)
             +pricingCard(plans[i])
         
-        //- .card
-        //-     .card--header2
-        //-         h1.entry Normal
-        //-         span.main
-        //-             h2.dollar.price-tag(data-value1="14", data-value2="40") 14€
-        //-             span.sub
-        //-                 p.tag /month
-        //-                 span.badge.badge--small 20% OFF
-        //-         h2.moto Easy Start on the Cloud
-        //-     .description
-        //-         ul.description--list
-        //-             li.list lorem ipsum lore
-        //-             li.list lorem ipsum lore
-        //-             li.list lorem ipsum lore
-        //-             li.list lorem ipsum lore
-        //-         .nav-item.text-center.action-buttons.pricing-buttons
-        //-             a.btn-outline-primary.btn.my-2.my-lg-3.mx-2.px-4(href="./components/pricing.html")
-        //-                 i.bi.bi-currency-euro
-        //-                 | subscribe
-        //- .card
-        //-     .card--header2
-        //-         h1.entry Standard
-        //-         span.main
-        //-             h2.dollar.price-tag(data-value1="24", data-value2="80") 24€
-        //-             span.sub
-        //-                 p.tag /month
-        //-                 span.badge.badge--small 10% OFF
-        //-         h2.moto Easy Start on the Cloud
-        //-     .description
-        //-         ul.description--list
-        //-             li.list lorem ipsum lore
-        //-             li.list lorem ipsum lore
-        //-             li.list lorem ipsum lore
-        //-             li.list lorem ipsum lore
-        //-         .nav-item.text-center.action-buttons.pricing-buttons
-        //-             a.btn-outline-primary.btn.my-2.my-lg-3.mx-2.px-4(href="./components/pricing.html")
-        //-                 i.bi.bi-currency-euro
-        //-                 | subscribe
-        //- .card
-        //-     .card--header2
-        //-         h1.entry Premium
-        //-         span.main
-        //-             h2.dollar.price-tag(data-value1="34", data-value2="124") 34€
-        //-             span.sub
-        //-                 p.tag /month
-        //-                 span.badge.badge--small 10% OFF
-        //-         h2.moto Easy Start on the Cloud
-        //-     .description
-        //-         ul.description--list
-        //-             li.list lorem ipsum lore
-        //-             li.list lorem ipsum lore
-        //-             li.list lorem ipsum lore
-        //-             li.list lorem ipsum lore
-        //-         .nav-item.text-center.action-buttons.pricing-buttons
-        //-             a.btn-outline-primary.btn.my-2.my-lg-3.mx-2.px-4(href="./components/pricing.html")
-        //-                 i.bi.bi-currency-euro
-        //-                 | subscribe
     // FAQs section
     section.faqs.py-6.bg-turiLight.px-3.px-lg-0.bg-turiLight
         .container
@@ -181,10 +124,6 @@ block content
                     h2.fw-bold.display-5.text-center Frequently Asked Questions 
                     h4.fw-bold.text-center
                         | These are the most Frequently Asked Questions in our platform
-                    p.opacity-75
-                        | Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        | Cupiditate vitae velit nam consectetur, in ullam natus pariatur
-                        | aliquid. Aut, magnam!
                     // Accordion
                     #accordionExample.accordion
                         .accordion-item
